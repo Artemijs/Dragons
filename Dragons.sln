@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dragons", "Dragons\Dragons.vcxproj", "{BAA71B3B-17BA-42E6-82A8-D3BC1D2FDD71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAA71B3B-17BA-42E6-82A8-D3BC1D2FDD71}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BAA71B3B-17BA-42E6-82A8-D3BC1D2FDD71}.Debug|Win32.Build.0 = Debug|Win32
+		{BAA71B3B-17BA-42E6-82A8-D3BC1D2FDD71}.Release|Win32.ActiveCfg = Release|Win32
+		{BAA71B3B-17BA-42E6-82A8-D3BC1D2FDD71}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
