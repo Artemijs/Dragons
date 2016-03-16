@@ -11,8 +11,9 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(512, 384), "Test Window");
 	window.setFramerateLimit(30);
 	Circle* c = new Circle(0);
-	MovingState ms= MovingState();
-	c->setState(ms);
+	//MovingState ms= MovingState();
+	fptr moveState = action_move;
+	c->setState(moveState);
 	EntityManager::instance()->addEntity(c);
 	sf::Time deltaTime = clock.getElapsedTime();
 	while (window.isOpen()) {
