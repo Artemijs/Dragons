@@ -3,13 +3,20 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Entity.h"
+#include "BaseState.h"
+#include "EntityManager.h"
 int main() {
-	
+	sf::Clock clock; // starts the clock
 	sf::RenderWindow window(sf::VideoMode(512, 384), "Test Window");
 	window.setFramerateLimit(30);
-	
-	
+	Circle* c = new Circle(0);
+	MovingState ms= MovingState();
+	c->setState(ms);
+	EntityManager::instance()->addEntity(c);
+	sf::Time deltaTime = clock.getElapsedTime();
 	while (window.isOpen()) {
+		deltaTime = clock.restart();
 		sf::Event event;
 		//
 		while (window.pollEvent(event)) {
@@ -17,7 +24,9 @@ int main() {
 				window.close();
 			//manageInput(event, sf::Mouse::getPosition(window));
 		}
+		c->update(deltaTime.asMilliseconds());
 		window.clear();
+		window.draw(c->getCircle());
 		window.display();
 	}
 	return 0;
