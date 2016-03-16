@@ -1,7 +1,15 @@
+
+#ifndef ftrp
+typedef void (*fptr)(int id, float args[]);
+#endif
+
 #ifndef ENTITY_H
 #define ENTITY_H
 #include "SFML/Graphics.hpp" 
-#include "BaseState.h"
+#include <iostream>
+//#include "BaseState.h"
+
+
 class Entity{
 protected:
 	fptr m_state;
@@ -33,6 +41,7 @@ public:
 	}
 	sf::CircleShape getCircle(){ return m_circle; }
 	void update(float deltaTime){
+		
 		m_circle.setPosition(m_position);
 		float args[2];
 		args[0] = 1;

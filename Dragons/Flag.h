@@ -2,14 +2,19 @@
 #define FLAG_H
 
 #include "Entity.h"
-#include "BaseState.h"
-class Flag{
+#include "State.h"
+struct Flag{
+	std::string text;
+	Entity* m_target;//target
+	fptr m_newState;
+};
+/*class Flag{
 public:
 	std::string name;
-	Entity m_entity;
-	BaseState m_newState;
+	Entity m_target;//target
+	fptr m_newState;
 
-};
+};*/
 #endif
 
 

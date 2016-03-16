@@ -12,7 +12,13 @@ EntityManager::~EntityManager(){
 	delete m_all_entities;
 	delete m_instance;
 }
-
+void EntityManager::update(float deltaTime){
+	std::vector<Entity*>::iterator it = m_all_entities->begin();
+	std::vector<Entity*>::iterator end = m_all_entities->end();
+	for(; it != end; it++){
+		//(*it)->update(deltaTime);
+	}
+}
 EntityManager* EntityManager::instance(){
 	if(m_instance == 0)
 		m_instance = new EntityManager();

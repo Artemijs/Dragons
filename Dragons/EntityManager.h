@@ -13,5 +13,6 @@ public:
 	static EntityManager* instance();
 	int addEntity(Entity *ent);
 	Entity* getEntity(int entId);
+	void update(float deltaTime);
 };
 #endif
