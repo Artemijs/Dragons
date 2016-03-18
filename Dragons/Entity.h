@@ -13,21 +13,20 @@ typedef void (*fptr)(int id, float args[]);
 class Entity{
 protected:
 	fptr m_state;
-	sf::Vector2f m_position;
 	int m_id;//index in the all entities array
+	sf::Vector2f m_velocity;
+	sf::Vector2f m_position;
 public:
-	Entity(int id):m_id(id){
-		
-	}
+	Entity(int id);
 	fptr getState(){return m_state;}
-	void setState(fptr newState){
-		m_state = newState;
-	}
+	void setState(fptr newState);
+	void addVelocity(sf::Vector2f vel);
+	void setVelocity(sf::Vector2f newVel);
+	sf::Vector2f getVelocity(){return m_velocity;}
 	sf::Vector2f getPosition(){return m_position;}
-	void setPosition(float x, float y){m_position = sf::Vector2f(x, y);}
-	void update(float deltaTime);
-	
+	void setPosition(sf::Vector2f newPos);
 };
+/*
 class Circle : public Entity{
 private:
 	sf::CircleShape m_circle;
@@ -49,4 +48,5 @@ public:
 		m_state(m_id, args);
 	}
 };
+*/
 #endif

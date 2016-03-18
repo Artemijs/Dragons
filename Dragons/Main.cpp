@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "Entity.h"
+#include "Dragon.h"
 #include "State.h"
 #include "EntityManager.h"
 #include "FlagPool.h"
@@ -12,7 +12,8 @@ int main() {
 	sf::Clock clock; // starts the clock
 	sf::RenderWindow window(sf::VideoMode(512, 384), "Test Window");
 	window.setFramerateLimit(30);
-	Circle* c = new Circle(0);
+
+	Dragon* c = new Dragon(0);
 	fptr state = action_idle;
 	c->setState(state);
 	EntityManager::instance()->addEntity(c);
@@ -27,10 +28,10 @@ int main() {
 			manageInput(event, sf::Mouse::getPosition(window));
 		}
 		FlagPool::instance()->update(deltaTime.asMilliseconds());
-		//EntityManager::instance()->update(deltaTime.asMilliseconds());
-		c->update(deltaTime.asMilliseconds());
+		EntityManager::instance()->update(deltaTime.asMilliseconds());
+		//c->update(deltaTime.asMilliseconds());
 		window.clear();
-		window.draw(c->getCircle());
+		EntityManager::instance()->draw(&window);
 		window.display();
 	}
 	
