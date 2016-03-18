@@ -71,6 +71,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FlagPool.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MemoryChunk.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +81,7 @@
     <ClInclude Include="Flag.h" />
     <ClInclude Include="FlagPool.h" />
     <ClInclude Include="Macros.h" />
+    <ClInclude Include="MemoryChunk.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

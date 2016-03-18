@@ -8,11 +8,8 @@ void Dragon::update(float deltaTime){
 	if((*m_velocity).length() <= 100.0f)
 		*m_velocity+=(*m_acceleration)*incTime;
 		*/
-	
-	float args[2];
-	args[0] = 1;
-	args[1] = 0;
-	m_state(m_id, args);
+
+	m_state(m_id, m_state_args);
 	m_position+=m_velocity;
 	m_rect.setPosition(m_position);
 }

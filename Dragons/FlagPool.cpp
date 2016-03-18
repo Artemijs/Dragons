@@ -19,7 +19,7 @@ void FlagPool::update(float deltaTime){
 	std::vector<Flag>::iterator begin = m_allFlags->begin();
 	std::vector<Flag>::iterator end = m_allFlags->end();
 	while(begin != end){
-		(*begin).m_target->setState((*begin).m_newState);
+		(*begin).m_target->setState((*begin).m_newState, (*begin).args);
 		//begin = m_allFlags->erase(begin);
 		begin++;
 	}

@@ -7,6 +7,7 @@ struct Flag{
 	std::string text;
 	Entity* m_target;//target
 	fptr m_newState;
+	float* args;//i really , really dont think this is an efficient idea
 };
 /*class Flag{
 public:

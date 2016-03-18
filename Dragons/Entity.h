@@ -16,10 +16,13 @@ protected:
 	int m_id;//index in the all entities array
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_position;
+	float* m_state_args;
 public:
 	Entity(int id);
+	~Entity();
 	fptr getState(){return m_state;}
-	void setState(fptr newState);
+	float* getArgs(){return m_state_args;}
+	void setState(fptr newState, float* args);
 	void addVelocity(sf::Vector2f vel);
 	void setVelocity(sf::Vector2f newVel);
 	sf::Vector2f getVelocity(){return m_velocity;}

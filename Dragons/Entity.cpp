@@ -2,10 +2,18 @@
 Entity::Entity(int id):m_id(id){
 	m_velocity = sf::Vector2f(0,0);
 	m_position = sf::Vector2f(50,50);
+	m_state_args = 0;
 }
-void Entity::setState(fptr newState){
-	if(m_state != newState)
-		m_state = newState;
+Entity::~Entity(){
+
+	delete m_state_args;
+}
+void Entity::setState(fptr newState, float* args){
+	if(m_state == newState) return;
+
+	m_state = newState;
+	m_state_args = args;
+	
 }
 void Entity::addVelocity(sf::Vector2f vel){
 	m_velocity += vel;
