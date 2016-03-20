@@ -58,10 +58,13 @@ FLY
 class Dragon: public Entity{
 private:
 	sf::RectangleShape m_rect;
+	sf::CircleShape m_cF;
+	sf::CircleShape m_cB;
 public:
 	Dragon(int id);
 	void update(float deltaTime);
-	sf::RectangleShape getRect();
+	sf::RectangleShape* getRect();
 	void draw(sf::RenderWindow* window);
+	void rotate(float ang);
 };
 #endif

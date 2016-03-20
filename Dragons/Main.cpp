@@ -1,4 +1,4 @@
-
+#include "Macros.h"
 #include "SFML/Graphics.hpp" 
 #include <iostream>
 #include <fstream>
@@ -9,10 +9,52 @@
 #include "FlagPool.h"
 #include "MemoryChunk.h"
 void manageInput(sf::Event event, sf::Vector2i mousePos);
-class Stars;
+class Star{
+private:
+	sf::CircleShape shape;
+public:
+	Star(){
+		shape = sf::CircleShape((rand()%10));
+		shape.setPosition(sf::Vector2f((rand()%SCREEN_WIDTH), (rand()%SCREEN_HEIGHT)));
+	}
+	sf::CircleShape getShape(){
+		return shape;
+	}
+	void move(sf::Vector2f offset){
+		sf::Vector2f pos = shape.getPosition()+offset;
+		if((pos.x > SCREEN_WIDTH || pos.x < 0) ||(pos.y>SCREEN_HEIGHT || pos.y <0)){
+			shape = sf::CircleShape((rand()%10));
+			pos = (sf::Vector2f((rand()%SCREEN_WIDTH), (rand()%SCREEN_HEIGHT)));
+		}
+
+
+		shape.setPosition(pos);
+	}
+};
+class Stars{
+private:
+	Star all_stars[10];
+public:
+	Stars(){
+		for(int i =0; i < 10; i++){
+			all_stars[i] = Star();
+		}
+	}
+	void move(sf::Vector2f offset){
+		for(int i =0; i < 10; i++){
+			//all_stars[i].getShape().setPosition(all_stars[i].getShape().getPosition()+offset);
+			all_stars[i].move(offset);
+		}
+	}
+	void draw(sf::RenderWindow* window){
+		for(int i =0; i < 10; i++){
+			window->draw(all_stars[i].getShape());
+		}
+	}
+};
 int main() {
 	sf::Clock clock; // starts the clock
-	sf::RenderWindow window(sf::VideoMode(512, 384), "Test Window");
+	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Test Window");
 	window.setFramerateLimit(30);
 
 	Dragon* c = new Dragon(0);
@@ -20,6 +62,7 @@ int main() {
 	c->setState(state, 0);
 	EntityManager::instance()->addEntity(c);
 	sf::Time deltaTime = clock.getElapsedTime();
+	Stars stars = Stars();
 	while (window.isOpen()) {
 		deltaTime = clock.restart();
 		MemoryChunk::instance()->reset();
@@ -35,9 +78,11 @@ int main() {
 		//c->update(deltaTime.asMilliseconds());
 		window.clear();
 		EntityManager::instance()->draw(&window);
+		stars.move(c->getVelocity());
+		stars.draw(&window);
 		window.display();
 	}
-	
+	delete c;
 	return 0;
 }
 void manageInput(sf::Event event, sf::Vector2i mousePos){
@@ -60,18 +105,30 @@ void manageInput(sf::Event event, sf::Vector2i mousePos){
 		f.m_newState = action_idle;
 		FlagPool::instance()->addFlag(f);
 	}
-	if(event.type == sf::Event::MouseMoved){
+	if(event.type == sf::Event::KeyPressed){
+		if(event.key.code == sf::Keyboard::A){
+			Flag f;
+			f.m_target = EntityManager::instance()->getEntity(0);
+			float* args = MemoryChunk::instance()->getArray();
+			args[0] = 3;
+			MemoryChunk::instance()->changeIndexBy(1);
+			f.text= "rotate + ";
+			f.args = args;
+			f.m_newState = action_rotate;
+			FlagPool::instance()->addFlag(f);
+		}
+		if(event.key.code == sf::Keyboard::D){
+			Flag f;
+			f.m_target = EntityManager::instance()->getEntity(0);
+			float* args = MemoryChunk::instance()->getArray();
+			args[0] = -3;
+			MemoryChunk::instance()->changeIndexBy(1);
+			f.text= "rotate - ";
+			f.args = args;
+			f.m_newState = action_rotate;
+			FlagPool::instance()->addFlag(f);
+		}
 	}
 	if (event.type == sf::Event::MouseWheelMoved){
 	}
 }
-class Star{
-private:
-
-public:
-};
-class Stars{
-private:
-
-public:
-};

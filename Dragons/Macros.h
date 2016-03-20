@@ -1,1 +1,3 @@
 #define GRAVITY 9.81
+#define SCREEN_WIDTH 512
+#define SCREEN_HEIGHT 384

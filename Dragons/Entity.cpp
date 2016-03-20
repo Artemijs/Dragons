@@ -1,12 +1,13 @@
 #include "Entity.h"
+#include "Macros.h"
 Entity::Entity(int id):m_id(id){
 	m_velocity = sf::Vector2f(0,0);
-	m_position = sf::Vector2f(50,50);
+	m_position = sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 	m_state_args = 0;
 }
 Entity::~Entity(){
 
-	delete m_state_args;
+	//delete m_state_args;
 }
 void Entity::setState(fptr newState, float* args){
 	if(m_state == newState) return;

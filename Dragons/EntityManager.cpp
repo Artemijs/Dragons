@@ -5,6 +5,7 @@ EntityManager::EntityManager(){
 	m_entities_count=0;
 }
 EntityManager::~EntityManager(){
+	//not beign called prob
 	for (int i = 0; i < m_all_entities->size(); i++)
 	{
 		delete (*m_all_entities)[i];
