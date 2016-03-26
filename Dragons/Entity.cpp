@@ -4,9 +4,10 @@ Entity::Entity(int id):m_id(id){
 	m_velocity = sf::Vector2f(0,0);
 	m_position = sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 	m_state_args = 0;
+	m_stats = new Stats();
 }
 Entity::~Entity(){
-
+	delete m_stats;
 	//delete m_state_args;
 }
 void Entity::setState(fptr newState, float* args){

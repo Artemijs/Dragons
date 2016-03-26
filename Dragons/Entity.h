@@ -7,6 +7,8 @@ typedef void (*fptr)(int id, float args[]);
 #define ENTITY_H
 #include "SFML/Graphics.hpp" 
 #include <iostream>
+#include "Ability.h"
+#include "Stats.h"
 //#include "BaseState.h"
 
 
@@ -17,6 +19,7 @@ protected:
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_position;
 	float* m_state_args;
+	Stats* m_stats;
 public:
 	Entity(int id);
 	~Entity();

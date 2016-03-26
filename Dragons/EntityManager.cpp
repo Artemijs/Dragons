@@ -1,4 +1,5 @@
 #include "EntityManager.h"
+#include <assert.h>
 EntityManager* EntityManager::m_instance=0;
 EntityManager::EntityManager(){
 	m_all_entities = new std::vector<Dragon*>();
@@ -6,12 +7,13 @@ EntityManager::EntityManager(){
 }
 EntityManager::~EntityManager(){
 	//not beign called prob
-	for (int i = 0; i < m_all_entities->size(); i++)
+	std::cout<<" deleting ent manager \n";
+	for (unsigned i = 0; i < m_all_entities->size(); i++)
 	{
 		delete (*m_all_entities)[i];
 	}
 	delete m_all_entities;
-	delete m_instance;
+	//delete m_instance;
 }
 void EntityManager::update(float deltaTime){
 	std::vector<Dragon*>::iterator it = m_all_entities->begin();
@@ -39,4 +41,18 @@ int EntityManager::addEntity(Dragon *ent){
 }
 Dragon* EntityManager::getEntity(int entId){
 	return (*m_all_entities)[entId];
+}
+bool EntityManager::in_range(int myId, int targetId, float range){
+	assert(true);
+	return false;
+}
+void EntityManager::move_towards(int myId, int targetId){
+	assert(true);
+}
+bool EntityManager::in_range(int myId, sf::Vector2f* m_pos, float range){
+	assert(true);
+	return false;
+}
+void EntityManager::move_towards(int myId, sf::Vector2f* m_pos){
+	assert(true);
 }

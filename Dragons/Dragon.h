@@ -60,11 +60,22 @@ private:
 	sf::RectangleShape m_rect;
 	sf::CircleShape m_cF;
 	sf::CircleShape m_cB;
+	float m_moveSpeed;
+	float m_angle;
 public:
 	Dragon(int id);
 	void update(float deltaTime);
 	sf::RectangleShape* getRect();
 	void draw(sf::RenderWindow* window);
 	void rotate(float ang);
+	void move(sf::Vector2f dir);
+	void useAbility(int index);
 };
 #endif
+/*
+hunting
+swimming
+hair dryer
+
+
+*/
