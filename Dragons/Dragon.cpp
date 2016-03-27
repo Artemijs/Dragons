@@ -15,7 +15,7 @@ Dragon::Dragon(int id):Entity(id), m_moveSpeed(5), m_angle(0){
 }
 void Dragon::update(float deltaTime){
 	
-	int dir =1;
+	/*int dir =1;
 	float ang = m_rect.getRotation();
 	if(ang>0 && ang< 180){
 		dir = -1;
@@ -28,7 +28,8 @@ void Dragon::update(float deltaTime){
 	sf::Vector2f slopeDir = sf::Vector2f(std::cos(ang), std::sin(ang));
 	m_velocity = -slopeDir*m_moveSpeed;
 	m_velocity+=sf::Vector2f(0, -5);
-
+	*/
+	(*m_all_abilities)[0]->update(deltaTime);
 }
 sf::RectangleShape* Dragon::getRect(){
 	return &m_rect;
@@ -37,6 +38,7 @@ void Dragon::draw(sf::RenderWindow* window){
 	window->draw(m_rect);
 	window->draw(m_cF);
 	window->draw(m_cB);
+	(*m_all_abilities)[0]->draw(window);
 }
 void Dragon::rotate(float ang){
 	m_rect.rotate(ang);
@@ -44,5 +46,14 @@ void Dragon::rotate(float ang){
 	m_cB.rotate(ang);
 }
 void Dragon::move(sf::Vector2f dir){
-	m_velocity= dir*m_moveSpeed;
+	//m_velocity= dir*m_moveSpeed;
+}
+void Dragon::use_ability(int target, int aIndex){
+	(*m_all_abilities)[aIndex]->cast(target);
+}
+void Dragon::setPosition(sf::Vector2f newPos){
+	m_position = newPos;
+	m_rect.setPosition(newPos);
+	m_cF.setPosition(newPos);
+	m_cB.setPosition(newPos);
 }

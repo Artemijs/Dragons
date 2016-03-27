@@ -69,7 +69,8 @@ public:
 	void draw(sf::RenderWindow* window);
 	void rotate(float ang);
 	void move(sf::Vector2f dir);
-	void useAbility(int index);
+	void use_ability(int target, int aIndex);
+	void setPosition(sf::Vector2f newPos);
 };
 #endif
 /*

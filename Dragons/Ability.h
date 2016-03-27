@@ -28,7 +28,7 @@ enum Ability_State{
 };
 class Ability{
 protected:
-	bool m_alive;//used to chec k if its active or idle, to update/draw or not
+	bool m_alive;
 	float m_damage;//THIS SHOULD BE SOMETHING ELSE, something that includes a debuffs and shit 
 	float m_cast_speed_max;//delay before things happen, aka animation speed
 	float m_cast_speed_time;
@@ -43,6 +43,7 @@ protected:
 	Ability_State m_state;
 public :
 	Ability(){}
+	~Ability(){}
 	Ability(int myid);
 	virtual void cast(int targetId) = 0;
 	virtual void cast(sf::Vector2f* target) = 0;
@@ -54,8 +55,6 @@ public :
 	float get_cast_speed();
 	int get_target();
 	float get_range();
-	bool get_alive(){return m_alive;}
-	void get_alive(bool alive){m_alive = alive;}
 	sf::Vector2f* get_target_ptr();
 	void set_damage(float dmg);
 	void set_mana_cost(float mana_cost);
@@ -66,22 +65,41 @@ public :
 	void set_range(float range);
 
 };
+class Projectile{
+private:
+	sf::CircleShape m_shape;
+	sf::Vector2f m_velocity;
+	bool m_alive;
+	int m_target_id;//if hoing get a direction from you to it
+public:
+	Projectile();
+	Projectile(sf::Vector2f velocity);
+	bool get_alive(){return m_alive;}
+	void set_alive(bool live){m_alive = live;}
+	void update(float deltaTime, float speed);
+	void draw(sf::RenderWindow* window);
+	void set_position(sf::Vector2f pos);
+	void set_velocity(sf::Vector2f vel);
+	void set_targetId(int target){m_target_id = target;}
+
+};
 class Ability_Ranged: public Ability{
 	/*
 	any ability that throws something
 	*/
-protected:
+private:
 	float m_projectile_speed;
-	sf::CircleShape m_shape;
+	Projectile m_projectile;
 public:
 	Ability_Ranged(int myId);
+	~Ability_Ranged(){}
 	float get_projectile_speed();
 	//use this for homing projectiles
-	void cast(int targetId) = 0;
+	void cast(int targetId);
 	//use this for skillshots and aoe spells
-	void cast(sf::Vector2f* target) = 0;
-	void update(float deltaTime) = 0;
-	void draw(sf::RenderWindow* window) = 0;
+	void cast(sf::Vector2f* target);
+	void update(float deltaTime);
+	void draw(sf::RenderWindow* window);
 };
 class Ability_AOE: public Ability{
 /*

@@ -21,5 +21,7 @@ public:
 	bool in_range(int myId, sf::Vector2f* m_pos, float range);
 	void move_towards(int myId, int targetId);
 	void move_towards(int myId, sf::Vector2f* m_pos);
+	sf::Vector2f get_direction(int myId, int targetId);
+	sf::Vector2f get_direction(sf::Vector2f pos, int targetId);
 };
 #endif

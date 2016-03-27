@@ -1,5 +1,6 @@
 #include "EntityManager.h"
 #include <assert.h>
+#include "Math.h"
 EntityManager* EntityManager::m_instance=0;
 EntityManager::EntityManager(){
 	m_all_entities = new std::vector<Dragon*>();
@@ -8,11 +9,11 @@ EntityManager::EntityManager(){
 EntityManager::~EntityManager(){
 	//not beign called prob
 	std::cout<<" deleting ent manager \n";
-	for (unsigned i = 0; i < m_all_entities->size(); i++)
+	/*for (unsigned i = 0; i < m_all_entities->size(); i++)
 	{
 		delete (*m_all_entities)[i];
-	}
-	delete m_all_entities;
+	}*/
+	//delete[] m_all_entities;
 	//delete m_instance;
 }
 void EntityManager::update(float deltaTime){
@@ -43,16 +44,30 @@ Dragon* EntityManager::getEntity(int entId){
 	return (*m_all_entities)[entId];
 }
 bool EntityManager::in_range(int myId, int targetId, float range){
-	assert(true);
-	return false;
+	sf::Vector2f one = (*m_all_entities)[myId]->getPosition();
+	sf::Vector2f two = (*m_all_entities)[targetId]->getPosition();
+
+	return (math_get_distance(one, two)<range);
 }
 void EntityManager::move_towards(int myId, int targetId){
-	assert(true);
+	Dragon* one = (*m_all_entities)[myId];
+	sf::Vector2f two = (*m_all_entities)[targetId]->getPosition();
+	one->move(math_get_direction(one->getPosition(), two));
 }
-bool EntityManager::in_range(int myId, sf::Vector2f* m_pos, float range){
-	assert(true);
-	return false;
+bool EntityManager::in_range(int myId, sf::Vector2f* pos, float range){
+	sf::Vector2f one = (*m_all_entities)[myId]->getPosition();
+
+	return (math_get_distance(one, (*pos))<range);
 }
 void EntityManager::move_towards(int myId, sf::Vector2f* m_pos){
 	assert(true);
+}
+sf::Vector2f EntityManager::get_direction(int myId, int targetId){
+	sf::Vector2f one = (*m_all_entities)[myId]->getPosition();
+	sf::Vector2f two = (*m_all_entities)[targetId]->getPosition();
+	return math_get_direction(one, two);
+	
+}
+sf::Vector2f EntityManager::get_direction(sf::Vector2f pos, int targetId){
+	return math_get_direction(pos, (*m_all_entities)[targetId]->getPosition());
 }

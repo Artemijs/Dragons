@@ -12,7 +12,7 @@ Ability::Ability(int myid): m_my_id(myid){
 	m_cool_down_max = 20;
 	m_cool_down_current = 0;
 	m_range = 700*DUNIT;
-	m_target_id = 0;
+	m_target_id = -1;
 	m_target = 0;
 	m_state = Ability_State::READY;
 }
@@ -64,7 +64,7 @@ void Ability::set_range(float range){
 ////////////////////////////////////////////////////////////////////////////
 Ability_Ranged::Ability_Ranged(int myId) : Ability(myId){
 	m_projectile_speed = 5*DUNIT;
-	m_shape = sf::CircleShape(5);
+	m_projectile = Projectile();
 }
 void Ability_Ranged::cast(int targetId){
 	m_target_id = targetId;
@@ -74,7 +74,7 @@ void Ability_Ranged::cast(sf::Vector2f* target) {
 }
 //doesnt become alive untill the projectile is thrown
 void Ability_Ranged::update(float deltaTime){
-	if(m_state == Ability_State::READY){
+	if(m_state == Ability_State::READY && m_target_id != -1){
 		if(EntityManager::instance()->in_range(m_my_id, m_target_id, m_range)){
 			m_state=Ability_State::CHARGING;
 		}
@@ -91,19 +91,24 @@ void Ability_Ranged::update(float deltaTime){
 	}
 	else if( m_state == Ability_State::ACTION){
 		m_state = Ability_State::COOLDOWN;
-		//apply spell effects to target
-		//just dmg for now
-		//ooh wait lol this is a projectile spell, here you now launch the projectile
-
+		m_projectile.set_alive(true);
+		m_projectile.set_targetId(m_target_id);
+		m_projectile.set_position(EntityManager::instance()->getEntity(m_my_id)->getPosition());
+		m_target_id = -1;
+		
 	}
 	else if(m_state == Ability_State::COOLDOWN && m_cool_down_current <m_cool_down_max){
 		m_cool_down_current += deltaTime;
 	}
+	//also update the projectile all the time and have it check if its collided, 
+	//check returns true/false upon which i do damage
+	m_projectile.update(deltaTime, m_projectile_speed);
 	
 
 }
 void Ability_Ranged::draw(sf::RenderWindow* window){
 	//soon, probably draw the projectiles or some shit 
+	m_projectile.draw(window);
 }
 float Ability_Ranged::get_projectile_speed(){
 	return m_projectile_speed;
@@ -152,4 +157,32 @@ void Ability_AOE::update(float deltaTime){
 	else if(m_state == Ability_State::COOLDOWN && m_cool_down_current <m_cool_down_max){
 		m_cool_down_current += deltaTime;
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////projectile class///////////////////////////
+////////////////////////////////////////////////////////////////////////////
+Projectile::Projectile(){
+	m_velocity = sf::Vector2f(0, 0);
+	m_shape = sf::CircleShape(5);
+	m_alive = false;
+}
+Projectile::Projectile(sf::Vector2f vel): m_velocity(vel){
+	m_shape = sf::CircleShape(5);
+	m_alive = false;
+}
+void Projectile::draw(sf::RenderWindow* window){
+	if(!m_alive) return;
+	window->draw(m_shape);
+}
+void Projectile::update(float deltaTime, float speed){
+	if(!m_alive) return;
+	m_velocity = EntityManager::instance()->get_direction(m_shape.getPosition(), m_target_id);
+	m_shape.setPosition(m_shape.getPosition() + m_velocity * speed);
+}
+void Projectile::set_position(sf::Vector2f pos){
+	m_shape.setPosition(pos);
+}
+void Projectile::set_velocity(sf::Vector2f vel){
+	m_velocity = vel;
 }

@@ -16,43 +16,25 @@ class Entity{
 protected:
 	fptr m_state;
 	int m_id;//index in the all entities array
-	sf::Vector2f m_velocity;
+	sf::Vector2f m_direction;
 	sf::Vector2f m_position;
 	float* m_state_args;
 	Stats* m_stats;
+	std::vector<Ability*>* m_all_abilities;
+	int m_selected_target;
 public:
 	Entity(int id);
 	~Entity();
 	fptr getState(){return m_state;}
 	float* getArgs(){return m_state_args;}
 	void setState(fptr newState, float* args);
-	void addVelocity(sf::Vector2f vel);
-	void setVelocity(sf::Vector2f newVel);
-	sf::Vector2f getVelocity(){return m_velocity;}
+	//void addVelocity(sf::Vector2f vel);
+	void setDirection(sf::Vector2f newDir);
+	sf::Vector2f getDirection(){return m_direction;}
 	sf::Vector2f getPosition(){return m_position;}
 	void setPosition(sf::Vector2f newPos);
+	virtual void move(sf::Vector2f direction) =0;
+	virtual void use_ability(int target, int aIndex) = 0;
 };
-/*
-class Circle : public Entity{
-private:
-	sf::CircleShape m_circle;
-public:
-	Circle(int id):Entity(id){
-		m_circle = sf::CircleShape(10.0f);
-	}
-	void setPos(float x, float y){
-		Entity::setPosition(x, y);
-		m_circle.setPosition(x, y);
-	}
-	sf::CircleShape getCircle(){ return m_circle; }
-	void update(float deltaTime){
-		
-		m_circle.setPosition(m_position);
-		float args[2];
-		args[0] = 1;
-		args[1] = 0;
-		m_state(m_id, args);
-	}
-};
-*/
+
 #endif

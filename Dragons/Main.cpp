@@ -56,7 +56,11 @@ int main() {
 	window.setFramerateLimit(30);
 
 	Dragon* c = new Dragon(0);
+	c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
+	Dragon* d = new Dragon(1);
+	d->setPosition(sf::Vector2f(600, SCREEN_HEIGHT/2));
 	EntityManager::instance()->addEntity(c);
+	EntityManager::instance()->addEntity(d);
 	sf::Time deltaTime = clock.getElapsedTime();
 	Stars stars = Stars();
 	while (window.isOpen()) {
@@ -76,8 +80,8 @@ int main() {
 		//c->update(deltaTime.asMilliseconds());
 		window.clear();
 		EntityManager::instance()->draw(&window);
-		stars.move(c->getVelocity());
-		stars.draw(&window);
+//		stars.move(c->getVelocity());
+		//stars.draw(&window);
 		window.display();
 	}
 	delete c;
@@ -94,10 +98,11 @@ void manageInput(sf::Event event, sf::Vector2i mousePos){
 	}
 	if(event.type == sf::Event::KeyPressed){
 		if(event.key.code == sf::Keyboard::A){
-			EntityManager::instance()->getEntity(0)->rotate(-3);
+			//EntityManager::instance()->getEntity(0)->rotate(-3);
+			EntityManager::instance()->getEntity(0)->use_ability(1, 0);
 		}
 		if(event.key.code == sf::Keyboard::D){
-			EntityManager::instance()->getEntity(0)->rotate(3);
+			//EntityManager::instance()->getEntity(0)->rotate(3);
 		}
 	}
 	if (event.type == sf::Event::MouseWheelMoved){
