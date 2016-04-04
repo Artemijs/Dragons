@@ -1,4 +1,5 @@
 #include "Stats.h"
+#include <iostream>
 //NOTE: ATTACKSPEED MUST DECRESE TO INCREASE, because it is the animation time, the smaller the number, the shorter the animation, the faster you hit
 const float Stats::BASE_DAMAGE = 40;
 const float Stats::BASE_HEALTH = 600;
@@ -61,4 +62,12 @@ Stats::Stats(){
 	m_current_mana = m_int*m_int_to_mana + BASE_MANA;
 	m_max_mana = m_current_mana;
 	m_move_speed = BASE_MOVE_SPEED;
+}
+void Stats::take_damage(float damage){
+	m_current_hp -= damage *(1-m_armor);
+	std::cout<<"hp "<<m_current_hp<<"\n";
+}
+void Stats::lose_mana(float mana){
+	m_current_mana -= mana;
+	std::cout<<"mana "<<m_current_mana<<"\n";
 }

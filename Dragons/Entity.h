@@ -35,6 +35,7 @@ public:
 	void setPosition(sf::Vector2f newPos);
 	virtual void move(sf::Vector2f direction) =0;
 	virtual void use_ability(int target, int aIndex) = 0;
+	void take_damage(float dmg);
 };
 
 #endif

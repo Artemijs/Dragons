@@ -1,6 +1,7 @@
 #include "Ability.h"
 #include "Macros.h"
 #include "EntityManager.h"
+#include "Math.h"
 //////////////////////////////////ability class//////////////////////
 Ability::Ability(int myid): m_my_id(myid){
 	//default ability
@@ -9,7 +10,7 @@ Ability::Ability(int myid): m_my_id(myid){
 	m_cast_speed_max = 0.3;//third of a second
 	m_cast_speed_time=0;
 	m_mana_cost = 100;
-	m_cool_down_max = 20;
+	m_cool_down_max = 6;
 	m_cool_down_current = 0;
 	m_range = 700*DUNIT;
 	m_target_id = -1;
@@ -68,18 +69,25 @@ Ability_Ranged::Ability_Ranged(int myId) : Ability(myId){
 }
 void Ability_Ranged::cast(int targetId){
 	m_target_id = targetId;
+	//m_projectile.set_position(
+	//m_alive = true;
 }
 void Ability_Ranged::cast(sf::Vector2f* target) {
 	/*deprecated method*/
 }
 //doesnt become alive untill the projectile is thrown
 void Ability_Ranged::update(float deltaTime){
-	if(m_state == Ability_State::READY && m_target_id != -1){
-		if(EntityManager::instance()->in_range(m_my_id, m_target_id, m_range)){
-			m_state=Ability_State::CHARGING;
-		}
-		else{//walk towards the target
-			EntityManager::instance()->move_towards(m_my_id, m_target_id);
+	
+	//if(!m_alive)return;
+	//std::cout<<"cooldown :"<<m_cool_down_current<<" \n";
+	if(m_state == Ability_State::READY ){
+		if(m_target_id != -1){
+			if(EntityManager::instance()->in_range(m_my_id, m_target_id, m_range)){
+				m_state=Ability_State::CHARGING;
+			}
+			else{//walk towards the target
+				EntityManager::instance()->move_towards(m_my_id, m_target_id);
+			}
 		}
 	}
 	else if ( m_state == Ability_State::CHARGING){
@@ -94,17 +102,25 @@ void Ability_Ranged::update(float deltaTime){
 		m_projectile.set_alive(true);
 		m_projectile.set_targetId(m_target_id);
 		m_projectile.set_position(EntityManager::instance()->getEntity(m_my_id)->getPosition());
-		m_target_id = -1;
+		//m_target_id = -1;
 		
 	}
-	else if(m_state == Ability_State::COOLDOWN && m_cool_down_current <m_cool_down_max){
-		m_cool_down_current += deltaTime;
+	else{ //cooldown state
+		if( m_cool_down_current <m_cool_down_max){
+			m_cool_down_current += deltaTime;
+		}
+		else{
+			m_cool_down_current=0;
+			m_target_id=-1;
+			m_state = Ability_State::READY;
+		}
 	}
 	//also update the projectile all the time and have it check if its collided, 
 	//check returns true/false upon which i do damage
-	m_projectile.update(deltaTime, m_projectile_speed);
-	
+	if(m_projectile.update(deltaTime, m_projectile_speed)){
+		EntityManager::instance()->getEntity(m_projectile.get_target_id())->take_damage(m_damage);
 
+	}
 }
 void Ability_Ranged::draw(sf::RenderWindow* window){
 	//soon, probably draw the projectiles or some shit 
@@ -165,20 +181,30 @@ void Ability_AOE::update(float deltaTime){
 Projectile::Projectile(){
 	m_velocity = sf::Vector2f(0, 0);
 	m_shape = sf::CircleShape(5);
+	m_shape.setFillColor(sf::Color::Red);
 	m_alive = false;
 }
 Projectile::Projectile(sf::Vector2f vel): m_velocity(vel){
 	m_shape = sf::CircleShape(5);
+	m_shape.setFillColor(sf::Color::Red);
 	m_alive = false;
 }
 void Projectile::draw(sf::RenderWindow* window){
 	if(!m_alive) return;
 	window->draw(m_shape);
 }
-void Projectile::update(float deltaTime, float speed){
-	if(!m_alive) return;
+bool Projectile::update(float deltaTime, float speed){
+	if(!m_alive) return false;
 	m_velocity = EntityManager::instance()->get_direction(m_shape.getPosition(), m_target_id);
 	m_shape.setPosition(m_shape.getPosition() + m_velocity * speed);
+	//distance between you and target
+	 Entity* ent = EntityManager::instance()->getEntity(m_target_id);
+	if(math_get_distance(m_shape.getPosition(), ent->getPosition()) < 10){
+		//colided
+		m_alive = false;
+		return true;
+	}
+	return false;
 }
 void Projectile::set_position(sf::Vector2f pos){
 	m_shape.setPosition(pos);

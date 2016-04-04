@@ -28,3 +28,6 @@ void Entity::setDirection(sf::Vector2f newDir){
 void Entity::move(sf::Vector2f direction){
 	m_direction = direction;
 }
+void Entity::take_damage(float dmg){
+	m_stats->take_damage(dmg);
+}

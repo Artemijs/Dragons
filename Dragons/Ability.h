@@ -63,6 +63,7 @@ public :
 	void set_target(int targetId);
 	void set_target(sf::Vector2f* target);
 	void set_range(float range);
+	Ability_State get_state(){return m_state;}
 
 };
 class Projectile{
@@ -76,11 +77,12 @@ public:
 	Projectile(sf::Vector2f velocity);
 	bool get_alive(){return m_alive;}
 	void set_alive(bool live){m_alive = live;}
-	void update(float deltaTime, float speed);
+	bool update(float deltaTime, float speed);
 	void draw(sf::RenderWindow* window);
 	void set_position(sf::Vector2f pos);
 	void set_velocity(sf::Vector2f vel);
 	void set_targetId(int target){m_target_id = target;}
+	int get_target_id(){return m_target_id;}
 
 };
 class Ability_Ranged: public Ability{

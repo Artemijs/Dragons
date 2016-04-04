@@ -8,6 +8,7 @@
 #include "EntityManager.h"
 #include "FlagPool.h"
 #include "MemoryChunk.h"
+#include "Level.h"
 void manageInput(sf::Event event, sf::Vector2i mousePos);
 class Star{
 private:
@@ -54,7 +55,7 @@ int main() {
 	sf::Clock clock; // starts the clock
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Test Window");
 	window.setFramerateLimit(30);
-
+	Level::instance();
 	Dragon* c = new Dragon(0);
 	c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
 	Dragon* d = new Dragon(1);
@@ -66,8 +67,9 @@ int main() {
 	while (window.isOpen()) {
 		deltaTime = clock.restart();
 		float deltaT = (deltaTime.asMilliseconds());
-		std::cout<<(deltaT/1000);
-		std::cout<<std::endl;
+		deltaT/=1000;
+		//std::cout<<(deltaT/1000);
+	//	std::cout<<std::endl;
 		MemoryChunk::instance()->reset();
 		sf::Event event;
 		//
@@ -81,11 +83,13 @@ int main() {
 		window.clear();
 		EntityManager::instance()->draw(&window);
 //		stars.move(c->getVelocity());
+		Level::instance()->draw(&window);
 		//stars.draw(&window);
 		window.display();
 	}
 	delete c;
 	delete EntityManager::instance();
+	delete Level::instance();
 	system("PAUSE");
 	return 0;
 }

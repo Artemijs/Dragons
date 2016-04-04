@@ -1,5 +1,11 @@
 #include "Dragon.h"
-
+/*
+to do:
+hp below zero
+mana below zero
+hp/mana regen per second
+movement and shit 
+*/
 Dragon::Dragon(int id):Entity(id), m_moveSpeed(5), m_angle(0){
 	m_rect = sf::RectangleShape(sf::Vector2f(100, 30));
 	m_rect.setOrigin(50, 15);
@@ -49,7 +55,11 @@ void Dragon::move(sf::Vector2f dir){
 	//m_velocity= dir*m_moveSpeed;
 }
 void Dragon::use_ability(int target, int aIndex){
-	(*m_all_abilities)[aIndex]->cast(target);
+	
+	Ability* ab = (*m_all_abilities)[aIndex];
+	if(ab->get_state() != Ability_State::READY) return;
+	m_stats->lose_mana(ab->get_mana_cost());
+	ab->cast(target);
 }
 void Dragon::setPosition(sf::Vector2f newPos){
 	m_position = newPos;
