@@ -31,3 +31,6 @@ void Entity::move(sf::Vector2f direction){
 void Entity::take_damage(float dmg){
 	m_stats->take_damage(dmg);
 }
+sf::RectangleShape* Entity::getRect(){
+	return &m_rect;
+}

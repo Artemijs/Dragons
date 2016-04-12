@@ -9,6 +9,7 @@
 #include "FlagPool.h"
 #include "MemoryChunk.h"
 #include "Level.h"
+#include "CollisionManager.h"
 void manageInput(sf::Event event, sf::Vector2i mousePos);
 class Star{
 private:
@@ -56,6 +57,7 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Test Window");
 	window.setFramerateLimit(30);
 	Level::instance();
+	CollisionManager* collision_manager = new CollisionManager();
 	Dragon* c = new Dragon(0);
 	c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
 	Dragon* d = new Dragon(1);
@@ -78,6 +80,7 @@ int main() {
 				window.close();
 			manageInput(event, sf::Mouse::getPosition(window));
 		}
+		collision_manager->check_tiles();
 		EntityManager::instance()->update(deltaT);
 		//c->update(deltaTime.asMilliseconds());
 		window.clear();
@@ -90,6 +93,7 @@ int main() {
 	delete c;
 	delete EntityManager::instance();
 	delete Level::instance();
+	delete collision_manager;
 	system("PAUSE");
 	return 0;
 }
@@ -112,3 +116,8 @@ void manageInput(sf::Event event, sf::Vector2i mousePos){
 	if (event.type == sf::Event::MouseWheelMoved){
 	}
 }
+
+/*
+	list of shit that could use optimization
+		collision detection
+*/

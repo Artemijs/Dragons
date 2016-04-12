@@ -15,6 +15,7 @@ typedef void (*fptr)(int id, float args[]);
 class Entity{
 protected:
 	fptr m_state;
+	sf::RectangleShape m_rect;
 	int m_id;//index in the all entities array
 	sf::Vector2f m_direction;
 	sf::Vector2f m_position;
@@ -36,6 +37,9 @@ public:
 	virtual void move(sf::Vector2f direction) =0;
 	virtual void use_ability(int target, int aIndex) = 0;
 	void take_damage(float dmg);
+	sf::RectangleShape* getRect();
+	virtual void update(float deltaTime) =0;
+	virtual void draw(sf::RenderWindow* window) =0;
 };
 
 #endif

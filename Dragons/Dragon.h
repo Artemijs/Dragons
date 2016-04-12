@@ -57,7 +57,7 @@ FLY
 #include "SFML\Graphics.hpp"
 class Dragon: public Entity{
 private:
-	sf::RectangleShape m_rect;
+	
 	sf::CircleShape m_cF;
 	sf::CircleShape m_cB;
 	float m_moveSpeed;
@@ -65,7 +65,6 @@ private:
 public:
 	Dragon(int id);
 	void update(float deltaTime);
-	sf::RectangleShape* getRect();
 	void draw(sf::RenderWindow* window);
 	void rotate(float ang);
 	void move(sf::Vector2f dir);

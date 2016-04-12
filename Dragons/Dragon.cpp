@@ -35,11 +35,11 @@ void Dragon::update(float deltaTime){
 	m_velocity = -slopeDir*m_moveSpeed;
 	m_velocity+=sf::Vector2f(0, -5);
 	*/
+	m_position += sf::Vector2f(0, 5);
+	setPosition(m_position);
 	(*m_all_abilities)[0]->update(deltaTime);
 }
-sf::RectangleShape* Dragon::getRect(){
-	return &m_rect;
-}
+
 void Dragon::draw(sf::RenderWindow* window){
 	window->draw(m_rect);
 	window->draw(m_cF);

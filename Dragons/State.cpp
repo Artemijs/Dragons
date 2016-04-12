@@ -19,14 +19,14 @@ void action_rotate(int id, float args[]){
 	//rotate sprite
 	std::cout<<" rotating \n";
 	float angle = args[0];
-	Dragon* ent = EntityManager::instance()->getEntity(id);
-	ent->rotate(angle);
+	Entity* ent = EntityManager::instance()->getEntity(id);
+	//ent->rotate(angle);
 	ent->setState(action_fly, 0);
 
 }
 void action_fly(int id, float args[]){
 	std::cout<<"flying \n";
-	Dragon* ent = EntityManager::instance()->getEntity(id);
+	Entity* ent = EntityManager::instance()->getEntity(id);
 	float ang = ent->getRect()->getRotation();
 	int dir =1;
 	if(ang>0 && ang< 180){
