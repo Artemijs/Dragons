@@ -40,6 +40,7 @@ public:
 	sf::RectangleShape* getRect();
 	virtual void update(float deltaTime) =0;
 	virtual void draw(sf::RenderWindow* window) =0;
+	void move_hard(sf::Vector2f dist);
 };
 
 #endif

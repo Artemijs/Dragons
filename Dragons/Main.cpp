@@ -98,10 +98,9 @@ int main() {
 	return 0;
 }
 void manageInput(sf::Event event, sf::Vector2i mousePos){
-	EntityManager::instance()->getEntity(0)->setPosition(sf::Vector2f(mousePos.x, mousePos.y));
+	
 	if(event.type == sf::Event::MouseButtonPressed){
-		
-
+		EntityManager::instance()->getEntity(0)->setPosition(sf::Vector2f(mousePos.x, mousePos.y));
 	}
 	if(event.type == sf::Event::MouseButtonReleased){
 

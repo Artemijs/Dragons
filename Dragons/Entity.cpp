@@ -21,6 +21,9 @@ void Entity::setState(fptr newState, float* args){
 	m_state_args = args;
 	
 }
+void Entity::move_hard(sf::Vector2f dist){
+	m_position+=dist;
+}
 void Entity::setDirection(sf::Vector2f newDir){
 	m_direction = newDir;
 }
