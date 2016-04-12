@@ -60,10 +60,10 @@ int main() {
 	CollisionManager* collision_manager = new CollisionManager();
 	Dragon* c = new Dragon(0);
 	c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
-	Dragon* d = new Dragon(1);
-	d->setPosition(sf::Vector2f(600, SCREEN_HEIGHT/2));
+	//Dragon* d = new Dragon(1);
+	//d->setPosition(sf::Vector2f(600, SCREEN_HEIGHT/2));
 	EntityManager::instance()->addEntity(c);
-	EntityManager::instance()->addEntity(d);
+	//EntityManager::instance()->addEntity(d);
 	sf::Time deltaTime = clock.getElapsedTime();
 	Stars stars = Stars();
 	while (window.isOpen()) {
@@ -98,8 +98,10 @@ int main() {
 	return 0;
 }
 void manageInput(sf::Event event, sf::Vector2i mousePos){
+	EntityManager::instance()->getEntity(0)->setPosition(sf::Vector2f(mousePos.x, mousePos.y));
 	if(event.type == sf::Event::MouseButtonPressed){
 		
+
 	}
 	if(event.type == sf::Event::MouseButtonReleased){
 

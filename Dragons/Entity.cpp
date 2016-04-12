@@ -34,3 +34,6 @@ void Entity::take_damage(float dmg){
 sf::RectangleShape* Entity::getRect(){
 	return &m_rect;
 }
+void Entity::setPosition(sf::Vector2f newPos){
+	m_position = newPos;
+}

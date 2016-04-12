@@ -35,7 +35,7 @@ void Dragon::update(float deltaTime){
 	m_velocity = -slopeDir*m_moveSpeed;
 	m_velocity+=sf::Vector2f(0, -5);
 	*/
-	m_position += sf::Vector2f(0, 5);
+	//m_position += sf::Vector2f(0, 5); //gravity, ill rework this
 	setPosition(m_position);
 	(*m_all_abilities)[0]->update(deltaTime);
 }
@@ -62,7 +62,7 @@ void Dragon::use_ability(int target, int aIndex){
 	ab->cast(target);
 }
 void Dragon::setPosition(sf::Vector2f newPos){
-	m_position = newPos;
+	Entity::setPosition(newPos);
 	m_rect.setPosition(newPos);
 	m_cF.setPosition(newPos);
 	m_cB.setPosition(newPos);

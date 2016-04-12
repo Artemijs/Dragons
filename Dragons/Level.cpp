@@ -15,7 +15,14 @@ Level::Level(){
 	{
 		std::cout<<"failed loading tile texture \n";
 	}
-	for(int i =0; i < MAX_TILES_HORIZONTAL; ++i){
+	sf::Vector2f pos = sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+		sf::Sprite* s = new sf::Sprite(m_texture1);
+		s->setPosition(pos);
+		Tile* t = new Tile();
+		t->set_sprite(s);
+		m_all_tiles.push_back(t);
+	
+	/*for(int i =0; i < MAX_TILES_HORIZONTAL; ++i){
 		sf::Vector2f pos = sf::Vector2f(0+i*TILE_WIDTH, SCREEN_HEIGHT*0.7);
 		sf::Sprite* s = new sf::Sprite(m_texture1);
 		s->setPosition(pos);
@@ -23,7 +30,7 @@ Level::Level(){
 		t->set_sprite(s);
 		m_all_tiles.push_back(t);
 
-	}
+	}*/
 }
 
 Level::~Level(){
