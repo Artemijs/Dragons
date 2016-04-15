@@ -7,14 +7,12 @@ EntityManager::EntityManager(){
 	m_entities_count=0;
 }
 EntityManager::~EntityManager(){
-	//not beign called prob
 	std::cout<<" deleting ent manager \n";
-	/*for (unsigned i = 0; i < m_all_entities->size(); i++)
+	for (std::vector< Entity * >::iterator it = m_all_entities->begin() ; it != m_all_entities->end(); ++it)
 	{
-		delete (*m_all_entities)[i];
-	}*/
-	//delete[] m_all_entities;
-	//delete m_instance;
+		delete (*it);
+	} 
+	m_all_entities->clear();
 }
 void EntityManager::update(float deltaTime){
 	std::vector<Entity*>::iterator it = m_all_entities->begin();
@@ -35,7 +33,7 @@ EntityManager* EntityManager::instance(){
 		m_instance = new EntityManager();
 	return m_instance;
 }
-int EntityManager::addEntity(Dragon *ent){
+int EntityManager::addEntity(Entity *ent){
 	m_all_entities->push_back(ent);
 	m_entities_count++;
 	return m_entities_count;

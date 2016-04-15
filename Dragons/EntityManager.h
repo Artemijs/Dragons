@@ -13,7 +13,7 @@ private:
 public:
 	~EntityManager();
 	static EntityManager* instance();
-	int addEntity(Dragon *ent);
+	int addEntity(Entity *ent);
 	Entity* getEntity(int entId);
 	void update(float deltaTime);
 	void draw(sf::RenderWindow* window);

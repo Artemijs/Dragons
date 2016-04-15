@@ -35,7 +35,7 @@ void Dragon::update(float deltaTime){
 	m_velocity = -slopeDir*m_moveSpeed;
 	m_velocity+=sf::Vector2f(0, -5);
 	*/
-	//m_position += sf::Vector2f(0, 5); //gravity, ill rework this
+	m_position += sf::Vector2f(0, 5) + m_direction*m_stats->get_move_speed(); //gravity, ill rework this
 	setPosition(m_position);
 	(*m_all_abilities)[0]->update(deltaTime);
 }
@@ -52,7 +52,7 @@ void Dragon::rotate(float ang){
 	m_cB.rotate(ang);
 }
 void Dragon::move(sf::Vector2f dir){
-	//m_velocity= dir*m_moveSpeed;
+	m_direction = dir;
 }
 void Dragon::use_ability(int target, int aIndex){
 	
@@ -63,7 +63,11 @@ void Dragon::use_ability(int target, int aIndex){
 }
 void Dragon::setPosition(sf::Vector2f newPos){
 	Entity::setPosition(newPos);
-	m_rect.setPosition(newPos);
-	m_cF.setPosition(newPos);
-	m_cB.setPosition(newPos);
+	update_visual();
+	
+}
+void Dragon::update_visual(){
+	m_rect.setPosition(m_position);
+	m_cF.setPosition(m_position);
+	m_cB.setPosition(m_position);
 }

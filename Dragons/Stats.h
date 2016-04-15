@@ -75,6 +75,7 @@ public:
 		float str2hp, float str2hpreg, float agi2armor, float agi2attSpeed, float movspid );
 	void take_damage(float damage);
 	void lose_mana(float mana);
+	float get_move_speed();
 	
 };
 #endif 

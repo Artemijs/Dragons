@@ -1,4 +1,4 @@
-#define GRAVITY 9.81
+#define GRAVITY 5
 #define SCREEN_WIDTH 1366/2
 #define SCREEN_HEIGHT 768/2
 #define DUNIT (1)// ill get back to you , you little devil

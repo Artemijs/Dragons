@@ -71,3 +71,6 @@ void Stats::lose_mana(float mana){
 	m_current_mana -= mana;
 	std::cout<<"mana "<<m_current_mana<<"\n";
 }
+float Stats::get_move_speed(){
+	return m_move_speed;
+}

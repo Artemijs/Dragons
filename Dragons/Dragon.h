@@ -70,6 +70,9 @@ public:
 	void move(sf::Vector2f dir);
 	void use_ability(int target, int aIndex);
 	void setPosition(sf::Vector2f newPos);
+	void update_visual();
+};
+class Human: public Entity{
 };
 #endif
 /*

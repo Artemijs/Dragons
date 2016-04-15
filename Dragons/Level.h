@@ -28,8 +28,6 @@ public:
 };
 class Level{
 private:
-	sf::Texture m_texture1;// ill later give this a proper name
-	//and maybe put in an array
 	std::vector<Tile*> m_all_tiles;
 	Level();
 	static Level* m_instance;
