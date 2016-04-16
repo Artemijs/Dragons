@@ -4,6 +4,7 @@
 EntityManager* EntityManager::m_instance=0;
 EntityManager::EntityManager(){
 	m_all_entities = new std::vector<Entity*>();
+	m_all_npc_enemy= new std::vector<Entity*>();
 	m_entities_count=0;
 }
 EntityManager::~EntityManager(){
@@ -13,6 +14,9 @@ EntityManager::~EntityManager(){
 		delete (*it);
 	} 
 	m_all_entities->clear();
+	m_all_npc_enemy->clear();
+	delete m_all_entities;
+	delete m_all_npc_enemy;
 }
 void EntityManager::update(float deltaTime){
 	std::vector<Entity*>::iterator it = m_all_entities->begin();
@@ -34,9 +38,10 @@ EntityManager* EntityManager::instance(){
 	return m_instance;
 }
 int EntityManager::addEntity(Entity *ent){
+	ent->set_id(m_all_entities->size());
 	m_all_entities->push_back(ent);
 	m_entities_count++;
-	return m_entities_count;
+	return (m_entities_count-1);
 }
 Entity* EntityManager::getEntity(int entId){
 	return (*m_all_entities)[entId];
@@ -74,4 +79,9 @@ std::vector<Entity*>::iterator EntityManager::get_beign(){
 }
 std::vector<Entity*>::iterator EntityManager::get_end(){
 	return m_all_entities->end();
+}
+int EntityManager::addEnemy(Entity* ent){
+	int id = addEntity(ent);
+	m_all_npc_enemy->push_back(ent);
+	return id;
 }

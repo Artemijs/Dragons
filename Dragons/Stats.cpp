@@ -13,64 +13,69 @@ const float Stats::MAX_ATTACK_SPEED = 0.2;
 const float Stats::BASE_MOVE_SPEED = 3;
 const float Stats::MAX_MOVE_SPEED = 10;
 Stats::Stats(float dmg, float intel, float str, float agi, float int2mana, float int2mreg,
-	float str2hp, float str2hpreg, float agi2armor, float agi2attSpeed, float movspid):
-	m_int_to_mana(int2mana),
-	m_int_to_regen(int2mreg),
-	m_str_to_health(str2hp),
-	m_str_to_regen(str2hpreg),
-	m_agi_to_armor(agi2armor),
-	m_agi_to_att_speed(agi2attSpeed){
+	float str2hp, float str2hpreg, float agi2armor, float agi2attSpeed, float movspid){
 	
-	m_int = BASE_INT + intel;
-	m_str = BASE_STR + str;
-	m_agi = BASE_AGI + agi;
+	m_all_stats[Stat_Type::INT_2_MANA] = int2mana;
+	m_all_stats[Stat_Type::INT_2_REGEN] = int2mreg;
+	m_all_stats[Stat_Type::STR_2_HP] = str2hp;
+	m_all_stats[Stat_Type::STR_2_REGEN] = str2hpreg;
+	m_all_stats[Stat_Type::AGI_2_ARMOR] = agi2armor;
+	m_all_stats[Stat_Type::AGI_2_ATT_SPEED] = agi2attSpeed;
 
-	//your actual in game stats
-	m_damage = dmg+BASE_DAMAGE;
-	m_armor = BASE_ARMOR + m_agi*m_agi_to_armor;
-	m_attack_speed = BASE_ATTACK_SPEED - m_agi*m_agi_to_att_speed;
-	m_hp_regen = m_str*m_str_to_regen;
-	m_current_hp = BASE_HEALTH + m_str*m_str_to_health;
-	m_max_hp = m_current_hp;
-	m_mana_regen = m_int * m_int_to_regen;
-	m_current_mana = m_int*m_int_to_mana + BASE_MANA;
-	m_max_mana = m_current_mana;
-	m_move_speed = BASE_MOVE_SPEED + movspid;
+	m_all_stats[Stat_Type::INT] = BASE_INT + intel;
+	m_all_stats[Stat_Type::STR] = BASE_STR + str;
+	m_all_stats[Stat_Type::AGI] = BASE_AGI + agi;
 
+	//your actual in game stats, which can be affected by buffs/debuffs
+	m_all_stats[Stat_Type::DAMAGE] = dmg + BASE_DAMAGE;
+	m_all_stats[Stat_Type::ARMOR] = BASE_ARMOR + m_all_stats[Stat_Type::AGI] * m_all_stats[Stat_Type::AGI_2_ARMOR];
+	m_all_stats[Stat_Type::HP_REGEN] = m_all_stats[Stat_Type::STR] * m_all_stats[Stat_Type::STR_2_REGEN];
+	m_all_stats[Stat_Type::MAX_HP] = BASE_HEALTH + m_all_stats[Stat_Type::STR] * m_all_stats[Stat_Type::STR_2_HP];
+	//m_attack_speed = BASE_ATTACK_SPEED - m_agi*m_agi_to_att_speed;
+	m_all_stats[Stat_Type::CURR_HP] = m_all_stats[Stat_Type::MAX_HP];
+	m_all_stats[Stat_Type::MAX_MANA] = BASE_MANA + m_all_stats[Stat_Type::INT] * m_all_stats[Stat_Type::INT_2_MANA];
+	m_all_stats[Stat_Type::CURR_MANA] = m_all_stats[Stat_Type::MAX_MANA];
+	m_all_stats[Stat_Type::MANA_REGEN] = m_all_stats[Stat_Type::INT] * m_all_stats[Stat_Type::INT_2_REGEN];
+	m_all_stats[Stat_Type::MOVE_SPEED] = BASE_MOVE_SPEED + movspid;
 }
 Stats::Stats(){
-	//your 3 basic stats
-	m_int = BASE_INT;//inteligence
-	m_str = BASE_STR;//strenght
-	m_agi = BASE_AGI;//agility
-	//things that your 3 basic stats give uou
-	m_int_to_mana = 5;//max mana
-	m_int_to_regen = 0.1;//mana regen per second
-	m_str_to_health = 10;//max hp
-	m_str_to_regen = 0.1;//hp regen
-	m_agi_to_armor = 0.005;
-	m_agi_to_att_speed = 0.007;
+	m_all_stats[Stat_Type::INT_2_MANA] = 5;
+	m_all_stats[Stat_Type::INT_2_REGEN] = 0.1;
+	m_all_stats[Stat_Type::STR_2_HP] = 10;
+	m_all_stats[Stat_Type::STR_2_REGEN] = 0.1;
+	m_all_stats[Stat_Type::AGI_2_ARMOR] = 0.005;
+	m_all_stats[Stat_Type::AGI_2_ATT_SPEED] = 0.007;
 
-	//your actual in game stats
-	m_damage = BASE_DAMAGE;
-	m_armor = BASE_ARMOR + m_agi*m_agi_to_armor;
-	m_attack_speed = BASE_ATTACK_SPEED - m_agi*m_agi_to_att_speed;
-	m_hp_regen = m_str*m_str_to_regen;
-	m_current_hp = BASE_HEALTH + m_str*m_str_to_health;
-	m_max_hp = m_current_hp;
-	m_mana_regen = m_int * m_int_to_regen;
-	m_current_mana = m_int*m_int_to_mana + BASE_MANA;
-	m_max_mana = m_current_mana;
-	m_move_speed = BASE_MOVE_SPEED;
+	m_all_stats[Stat_Type::INT] = BASE_INT;
+	m_all_stats[Stat_Type::STR] = BASE_STR;
+	m_all_stats[Stat_Type::AGI] = BASE_AGI;
+
+	//your actual in game stats, which can be affected by buffs/debuffs
+	m_all_stats[Stat_Type::DAMAGE] = BASE_DAMAGE;
+	m_all_stats[Stat_Type::ARMOR] = BASE_ARMOR + m_all_stats[Stat_Type::AGI] * m_all_stats[Stat_Type::AGI_2_ARMOR];
+	m_all_stats[Stat_Type::HP_REGEN] = m_all_stats[Stat_Type::STR] * m_all_stats[Stat_Type::STR_2_REGEN];
+	m_all_stats[Stat_Type::MAX_HP] = BASE_HEALTH + m_all_stats[Stat_Type::STR] * m_all_stats[Stat_Type::STR_2_HP];
+	//m_attack_speed = BASE_ATTACK_SPEED - m_agi*m_agi_to_att_speed;
+	m_all_stats[Stat_Type::CURR_HP] = m_all_stats[Stat_Type::MAX_HP];
+	m_all_stats[Stat_Type::MAX_MANA] = BASE_MANA + m_all_stats[Stat_Type::INT] * m_all_stats[Stat_Type::INT_2_MANA];
+	m_all_stats[Stat_Type::CURR_MANA] = m_all_stats[Stat_Type::MAX_MANA];
+	m_all_stats[Stat_Type::MANA_REGEN] = m_all_stats[Stat_Type::INT] * m_all_stats[Stat_Type::INT_2_REGEN];
+	m_all_stats[Stat_Type::MOVE_SPEED] = BASE_MOVE_SPEED;
 }
 void Stats::take_damage(float damage){
-	m_current_hp -= damage *(1-m_armor);
-	std::cout<<"hp "<<m_current_hp<<"\n";
+	m_all_stats[Stat_Type::CURR_HP]  -= damage *(1-m_all_stats[Stat_Type::ARMOR]);
+	std::cout<<"hp "<<m_all_stats[Stat_Type::CURR_HP]<<"\n";
 }
 void Stats::lose_mana(float mana){
-	m_current_mana -= mana;
-	std::cout<<"mana "<<m_current_mana<<"\n";
+	m_all_stats[Stat_Type::CURR_MANA] -= mana;
+	std::cout<<"mana "<<m_all_stats[Stat_Type::CURR_MANA]<<"\n";
 }
-float Stats::get_move_speed(){
-	return m_move_speed;
+const float Stats::get_stat(Stat_Type st){
+	return m_all_stats[st];
+}
+void Stats::reset(){
+	m_all_stats[Stat_Type::MAX_HP] = BASE_HEALTH + m_all_stats[Stat_Type::STR] * m_all_stats[Stat_Type::STR_2_HP];
+	m_all_stats[Stat_Type::CURR_HP] = m_all_stats[Stat_Type::MAX_HP];
+	m_all_stats[Stat_Type::MAX_MANA] = BASE_MANA + m_all_stats[Stat_Type::INT] * m_all_stats[Stat_Type::INT_2_MANA];
+	m_all_stats[Stat_Type::CURR_MANA] = m_all_stats[Stat_Type::MAX_MANA];
 }

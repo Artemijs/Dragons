@@ -6,7 +6,7 @@ mana below zero
 hp/mana regen per second
 movement and shit 
 */
-Dragon::Dragon(int id):Entity(id), m_moveSpeed(5), m_angle(0){
+Dragon::Dragon(int id):Entity(id), m_angle(0){
 	m_rect = sf::RectangleShape(sf::Vector2f(100, 30));
 	m_rect.setOrigin(50, 15);
 	m_rect.setPosition(m_position);
@@ -35,7 +35,7 @@ void Dragon::update(float deltaTime){
 	m_velocity = -slopeDir*m_moveSpeed;
 	m_velocity+=sf::Vector2f(0, -5);
 	*/
-	m_position += sf::Vector2f(0, 5) + m_direction*m_stats->get_move_speed(); //gravity, ill rework this
+	m_position += sf::Vector2f(0, 5) + m_direction*m_stats->get_stat(Stat_Type::MOVE_SPEED); //gravity, ill rework this
 	setPosition(m_position);
 	(*m_all_abilities)[0]->update(deltaTime);
 }
@@ -70,4 +70,35 @@ void Dragon::update_visual(){
 	m_rect.setPosition(m_position);
 	m_cF.setPosition(m_position);
 	m_cB.setPosition(m_position);
+}
+Dragon::~Dragon(){
+	//delete m_stats;
+}
+Human::Human(int id):Entity(id){
+	m_rect = sf::RectangleShape(sf::Vector2f(50, 50));
+}
+Human::~Human(){
+	//delete m_stats;
+}
+void Human::update(float deltaTime){
+	m_position += sf::Vector2f(0, 5) + m_direction*m_stats->get_stat(Stat_Type::MOVE_SPEED); //gravity, ill rework this
+	(*m_all_abilities)[0]->update(deltaTime);
+	setPosition(m_position);
+	update_visual();
+}
+void Human::update_visual(){
+	m_rect.setPosition(m_position);
+}
+void Human::draw(sf::RenderWindow* window){
+	window->draw(m_rect);
+	(*m_all_abilities)[0]->draw(window);
+}
+void Human::move(sf::Vector2f direction){
+	m_direction = direction;
+}
+void Human::use_ability(int target, int aIndex){
+	Ability* ab = (*m_all_abilities)[aIndex];
+	if(ab->get_state() != Ability_State::READY) return;
+	m_stats->lose_mana(ab->get_mana_cost());
+	ab->cast(target);
 }

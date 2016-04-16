@@ -33,31 +33,30 @@ yes yes yes, inspired by dota 2 i know, but its a good system
 
 #ifndef STATS_H
 #define	STATS_H
+enum Stat_Type{
+	INT,
+	STR,
+	AGI,
+	INT_2_MANA,
+	INT_2_REGEN,
+	STR_2_HP,
+	STR_2_REGEN,
+	AGI_2_ARMOR,
+	AGI_2_ATT_SPEED,
+	DAMAGE,
+	ARMOR,
+	HP_REGEN,
+	MANA_REGEN,
+	MAX_HP,
+	MAX_MANA,
+	CURR_HP,
+	CURR_MANA,
+	MOVE_SPEED
+
+};
 class Stats{
 private:
-	//your 3 basic stats
-	float m_int;//inteligence
-	float m_str;//strenght
-	float m_agi;//agility
-	//things that your 3 basic stats give uou
-	float m_int_to_mana;//max mana
-	float m_int_to_regen;//mana regen per second
-	float m_str_to_health;//max hp
-	float m_str_to_regen;//hp regen
-	float m_agi_to_armor;
-	float m_agi_to_att_speed;
-
-	//your actual in game stats
-	float m_damage; // dmg = base_dmg+whatever
-	float m_armor;// = base_armor +m_agi*agi2armor
-	float m_attack_speed;// = base_sattack_spid + m_agi*m_ag2aspeed
-	float m_hp_regen;// = m_str*m_str2hp_regen
-	float m_current_hp;// = base_hp + m_str*str_2_hp
-	float m_max_hp;// = base_hp + m_str*str_2_hp
-	float m_mana_regen;// =  m_int*str_2_regen
-	float m_current_mana;// = base_mana + m_str*str_2_mana
-	float m_max_mana;// = base_mana + m_str*str_2_mana
-	float m_move_speed;
+	float m_all_stats[18];
 public:
 	static const float BASE_DAMAGE ;
 	static const float BASE_HEALTH ;
@@ -71,11 +70,13 @@ public:
 	static const float BASE_MOVE_SPEED ;
 	static const float MAX_MOVE_SPEED ;
 	Stats();
+	~Stats(){}
 	Stats(float dmg, float intel, float str, float agi, float int2mana, float int2mreg,
 		float str2hp, float str2hpreg, float agi2armor, float agi2attSpeed, float movspid );
 	void take_damage(float damage);
 	void lose_mana(float mana);
-	float get_move_speed();
+	const float get_stat(Stat_Type st);
+	void reset();
 	
 };
 #endif 

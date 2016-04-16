@@ -71,12 +71,14 @@
     <ClCompile Include="Dragon.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Factory.cpp" />
     <ClCompile Include="FlagPool.cpp" />
     <ClCompile Include="GraphicsManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="MemoryChunk.cpp" />
+    <ClCompile Include="PlayerContainer.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Stats.cpp" />
   </ItemGroup>
@@ -86,6 +88,7 @@
     <ClInclude Include="Dragon.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Flag.h" />
     <ClInclude Include="FlagPool.h" />
     <ClInclude Include="GraphicsManager.h" />
@@ -93,6 +96,7 @@
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MemoryChunk.h" />
+    <ClInclude Include="PlayerContainer.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Stats.h" />
   </ItemGroup>

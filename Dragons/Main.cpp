@@ -10,6 +10,8 @@
 #include "MemoryChunk.h"
 #include "Level.h"
 #include "CollisionManager.h"
+#include "Factory.h"
+#include "PlayerContainer.h"
 void manageInput(sf::Event event, sf::Vector2i mousePos);
 class Star{
 private:
@@ -52,20 +54,25 @@ public:
 		}
 	}
 };
+PlayerContainer m_player;
 int main() {
 	sf::Clock clock; // starts the clock
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Test Window");
 	window.setFramerateLimit(30);
+	sf::View view(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+	window.setView(view);
 	Level::instance();
 	CollisionManager* collision_manager = new CollisionManager();
-	Dragon* c = new Dragon(0);
+
+	Dragon* c = fc_dragon_ptr();
 	c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
-	Dragon* d = new Dragon(1);
-	d->setPosition(sf::Vector2f(600, SCREEN_HEIGHT/2));
-	EntityManager::instance()->addEntity(c);
-	EntityManager::instance()->addEntity(d);
+	Human* h = fc_human_ptr();
+	h->setPosition(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+	m_player = PlayerContainer(h, c);
+
 	sf::Time deltaTime = clock.getElapsedTime();
 	Stars stars = Stars();
+
 	while (window.isOpen()) {
 		deltaTime = clock.restart();
 		float deltaT = (deltaTime.asMilliseconds());
@@ -80,9 +87,10 @@ int main() {
 				window.close();
 			manageInput(event, sf::Mouse::getPosition(window));
 		}
+		view.setCenter(m_player.HUMAN->getPosition());
 		collision_manager->check_tiles();
 		EntityManager::instance()->update(deltaT);
-		//c->update(deltaTime.asMilliseconds());
+		window.setView(view);
 		window.clear();
 		EntityManager::instance()->draw(&window);
 //		stars.move(c->getVelocity());
@@ -100,24 +108,37 @@ int main() {
 void manageInput(sf::Event event, sf::Vector2i mousePos){
 	
 	if(event.type == sf::Event::MouseButtonPressed){
-		EntityManager::instance()->getEntity(0)->setPosition(sf::Vector2f(mousePos.x, mousePos.y));
+		//EntityManager::instance()->getEntity(0)->setPosition(sf::Vector2f(mousePos.x, mousePos.y));
 	}
 	if(event.type == sf::Event::MouseButtonReleased){
 
 	}
 	if(event.type == sf::Event::KeyPressed){
 		if(event.key.code == sf::Keyboard::A){
-			EntityManager::instance()->getEntity(0)->move(sf::Vector2f(-1, 0));
+			m_player.HUMAN->move(sf::Vector2f(-1, 0));
 		}
 		if(event.key.code == sf::Keyboard::D){
-			EntityManager::instance()->getEntity(0)->move(sf::Vector2f(1, 0));
+			m_player.HUMAN->move(sf::Vector2f(1, 0));
+		}
+		if(event.key.code == sf::Keyboard::Space){
+			//jump
 		}
 	}
+	if(event.type == sf::Event::KeyReleased){
+		if(event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D)
+			m_player.HUMAN->move(sf::Vector2f(0, 0));
+	}
 	if (event.type == sf::Event::MouseWheelMoved){
+
 	}
 }
 
 /*
 	list of shit that could use optimization
 		collision detection
+
+*/
+/*
+	list of shit that would be a "quality of life" fix
+		entity factory
 */

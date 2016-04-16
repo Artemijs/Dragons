@@ -14,13 +14,6 @@ Entity::~Entity(){
 	//delete[] (*m_all_abilities);
 	//delete m_state_args;
 }
-void Entity::setState(fptr newState, float* args){
-	if(m_state == newState) return;
-
-	m_state = newState;
-	m_state_args = args;
-	
-}
 void Entity::move_hard(sf::Vector2f dist){
 	m_position+=dist;
 }
@@ -33,10 +26,26 @@ void Entity::move(sf::Vector2f direction){
 }
 void Entity::take_damage(float dmg){
 	m_stats->take_damage(dmg);
+	if(m_stats->get_stat(Stat_Type::CURR_HP)<0){
+		//death
+		m_state= EntityState::DEAD;
+	}
 }
 sf::RectangleShape* Entity::getRect(){
 	return &m_rect;
 }
 void Entity::setPosition(sf::Vector2f newPos){
 	m_position = newPos;
+}
+void Entity::respawn(sf::Vector2f pos){
+	/*
+		reset:
+			position
+			stats
+
+	*/
+	m_position = pos;
+	update_visual();
+	m_stats->reset();
+	m_state = EntityState::ALIVE;
 }

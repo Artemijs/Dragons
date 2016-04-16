@@ -57,13 +57,12 @@ FLY
 #include "SFML\Graphics.hpp"
 class Dragon: public Entity{
 private:
-	
 	sf::CircleShape m_cF;
 	sf::CircleShape m_cB;
-	float m_moveSpeed;
 	float m_angle;
 public:
 	Dragon(int id);
+	~Dragon();
 	void update(float deltaTime);
 	void draw(sf::RenderWindow* window);
 	void rotate(float ang);
@@ -73,12 +72,19 @@ public:
 	void update_visual();
 };
 class Human: public Entity{
+public:
+	Human(int id);
+	~Human();
+	void update(float deltaTime);
+	void update_visual();
+	void draw(sf::RenderWindow* window);
+	void move(sf::Vector2f direction);
+	void use_ability(int target, int aIndex);
 };
 #endif
+
 /*
 hunting
 swimming
 hair dryer
-
-
 */

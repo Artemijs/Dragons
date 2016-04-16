@@ -21,7 +21,7 @@ void action_rotate(int id, float args[]){
 	float angle = args[0];
 	Entity* ent = EntityManager::instance()->getEntity(id);
 	//ent->rotate(angle);
-	ent->setState(action_fly, 0);
+//	ent->setState(action_fly, 0);
 
 }
 void action_fly(int id, float args[]){

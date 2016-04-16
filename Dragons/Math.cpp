@@ -12,6 +12,6 @@ sf::Vector2f math_get_direction(sf::Vector2f one, sf::Vector2f two){
 float math_get_distance(sf::Vector2f one, sf::Vector2f two){
 	return math_get_lenght(two-one);
 }
-bool phys_basic_collision(sf::FloatRect one, sf::FloatRect two){
-	return one.intersects(two);
+int math_random_range(int max, int min){
+	return std::rand()%(max-min)+min;
 }

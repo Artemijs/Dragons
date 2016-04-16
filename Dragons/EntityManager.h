@@ -6,6 +6,7 @@
 class EntityManager{
 private:
 	std::vector<Entity*>* m_all_entities;
+	std::vector<Entity*>* m_all_npc_enemy;
 	int m_entities_count;
 	static EntityManager* m_instance;
 	EntityManager();
@@ -14,6 +15,7 @@ public:
 	~EntityManager();
 	static EntityManager* instance();
 	int addEntity(Entity *ent);
+	int addEnemy(Entity *ent);
 	Entity* getEntity(int entId);
 	void update(float deltaTime);
 	void draw(sf::RenderWindow* window);
