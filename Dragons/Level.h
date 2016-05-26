@@ -14,7 +14,7 @@ for the moment
 the level will be :
 TILED, so that you can randomize all the shit
 	tiles will need to have a preset type for collision detection
-	for example:
+	for example:`
 		flat tiles that you walk on
 		curvy tiles for slopes and shit and idk what else, ill think of something
 */
@@ -30,17 +30,28 @@ public:
 	SpawnPoint(sf::Vector2f pos);
 	void update(float deltaTime);
 };
+enum TILE_NEIGHBORS{
+	LEFT,
+	UP,
+	RIGHT,
+	DOWN
+};
 class Tile{
 private:
 	sf::Sprite* m_sprite;//later an animated sprite
+	std::vector<Tile*> m_neighbours;
+	//neighbour tiles
 public:
 	Tile(){}
 	~Tile();
 	sf::Vector2f get_position(){return m_sprite->getPosition();}
 	sf::Sprite* get_sprite(){return m_sprite;}
+	sf::Vector2f get_centre();
 	void set_sprite(sf::Sprite* sprt){
 		m_sprite = sprt;
 	}
+	Tile* get_neighbor(TILE_NEIGHBORS tile_n);
+	void set_neighbor( TILE_NEIGHBORS tile_n, Tile* n);
 };
 
 
@@ -56,6 +67,8 @@ public:
 	static Level* instance();
 	void update(float deltaTime);
 	void draw(sf::RenderWindow* window);
+	void create_graph();
+	Tile* get_origin();
 	std::vector<Tile*>::iterator get_beign();
 	std::vector<Tile*>::iterator get_end();
 };

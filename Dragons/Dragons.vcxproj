@@ -67,6 +67,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ability.cpp" />
+    <ClCompile Include="AI.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Dragon.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -78,12 +79,14 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="MemoryChunk.cpp" />
+    <ClCompile Include="Net.cpp" />
     <ClCompile Include="PlayerContainer.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Stats.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ability.h" />
+    <ClInclude Include="AI.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Dragon.h" />
     <ClInclude Include="Entity.h" />
@@ -96,6 +99,7 @@
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MemoryChunk.h" />
+    <ClInclude Include="Net.h" />
     <ClInclude Include="PlayerContainer.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Stats.h" />

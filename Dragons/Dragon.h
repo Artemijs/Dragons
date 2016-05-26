@@ -57,8 +57,6 @@ FLY
 #include "SFML\Graphics.hpp"
 class Dragon: public Entity{
 private:
-	sf::CircleShape m_cF;
-	sf::CircleShape m_cB;
 	float m_angle;
 public:
 	Dragon(int id);
@@ -80,6 +78,7 @@ public:
 	void draw(sf::RenderWindow* window);
 	void move(sf::Vector2f direction);
 	void use_ability(int target, int aIndex);
+	sf::Vector2f get_HeightWidth();
 };
 #endif
 

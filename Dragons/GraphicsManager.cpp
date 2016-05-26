@@ -4,7 +4,7 @@
 GraphicsManager* GraphicsManager::m_instance = 0;
 GraphicsManager::GraphicsManager(){
 	sf::Texture* t = new sf::Texture();
-	if (!t->loadFromFile("square.png", sf::IntRect(0, 0, TILE_WIDTH, TILE_HEIGHT)))
+	if (!t->loadFromFile("square.png"))
 	{
 		std::cout<<"failed loading tile texture \n";
 	}

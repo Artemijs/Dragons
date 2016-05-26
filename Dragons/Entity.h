@@ -17,6 +17,7 @@ enum EntityState{
 };
 class Entity{
 protected:
+	int m_current_tile;
 	EntityState m_state;//depricated
 	float* m_state_args;
 	sf::RectangleShape m_rect;
@@ -49,6 +50,8 @@ public:
 	virtual void move(sf::Vector2f direction) =0;
 	virtual void use_ability(int target, int aIndex) = 0;
 	void respawn(sf::Vector2f pos);
+	void set_tile(int t){m_current_tile = t;}
+	int get_tile(){return m_current_tile;}
 	
 };
 

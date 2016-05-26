@@ -7,17 +7,10 @@ hp/mana regen per second
 movement and shit 
 */
 Dragon::Dragon(int id):Entity(id), m_angle(0){
-	m_rect = sf::RectangleShape(sf::Vector2f(100, 30));
-	m_rect.setOrigin(50, 15);
+	m_rect = sf::RectangleShape(sf::Vector2f(30, 30));
+	m_rect.setOrigin(15, 15);
 	m_rect.setPosition(m_position);
-	m_cF = sf::CircleShape(5);
-	m_cB = sf::CircleShape(5);
-	m_cF.setPosition(m_position.x, m_position.y);
-	m_cB.setPosition(m_position.x, m_position.y);
-	m_cF.setOrigin(-48, 2);
-	m_cB.setOrigin(52 , 2);
-	m_cF.setFillColor(sf::Color::Red);
-	m_cB.setFillColor(sf::Color::Blue);
+	m_rect.setFillColor(sf::Color::Red);
 }
 void Dragon::update(float deltaTime){
 	
@@ -42,14 +35,10 @@ void Dragon::update(float deltaTime){
 
 void Dragon::draw(sf::RenderWindow* window){
 	window->draw(m_rect);
-	window->draw(m_cF);
-	window->draw(m_cB);
 	(*m_all_abilities)[0]->draw(window);
 }
 void Dragon::rotate(float ang){
 	m_rect.rotate(ang);
-	m_cF.rotate(ang);
-	m_cB.rotate(ang);
 }
 void Dragon::move(sf::Vector2f dir){
 	m_direction = dir;
@@ -68,8 +57,6 @@ void Dragon::setPosition(sf::Vector2f newPos){
 }
 void Dragon::update_visual(){
 	m_rect.setPosition(m_position);
-	m_cF.setPosition(m_position);
-	m_cB.setPosition(m_position);
 }
 Dragon::~Dragon(){
 	//delete m_stats;
@@ -81,9 +68,10 @@ Human::~Human(){
 	//delete m_stats;
 }
 void Human::update(float deltaTime){
-	m_position += sf::Vector2f(0, 5) + m_direction*m_stats->get_stat(Stat_Type::MOVE_SPEED); //gravity, ill rework this
+	m_position +=  m_direction*m_stats->get_stat(Stat_Type::MOVE_SPEED); //gravity, ill rework this
 	(*m_all_abilities)[0]->update(deltaTime);
 	setPosition(m_position);
+	m_direction=sf::Vector2f(0,0);
 	update_visual();
 }
 void Human::update_visual(){
@@ -101,4 +89,8 @@ void Human::use_ability(int target, int aIndex){
 	if(ab->get_state() != Ability_State::READY) return;
 	m_stats->lose_mana(ab->get_mana_cost());
 	ab->cast(target);
+}
+sf::Vector2f Human::get_HeightWidth(){
+	return sf::Vector2f(m_rect.getGlobalBounds().width/2,
+		m_rect.getGlobalBounds().height/2);
 }

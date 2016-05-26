@@ -12,6 +12,7 @@
 #include "CollisionManager.h"
 #include "Factory.h"
 #include "PlayerContainer.h"
+#include "AI.h"
 void manageInput(sf::Event event, sf::Vector2i mousePos);
 class Star{
 private:
@@ -54,55 +55,83 @@ public:
 		}
 	}
 };
+
+void stm_main(){
+	//std::cout<<"soon";
+	AI ai;
+	/*Item itm;
+	itm.push_back(0);
+	itm.push_back(0);
+	itm.push_back(1);
+	itm.push_back(0.5);
+	itm.push_back(0);
+	itm.push_back(1);
+	itm.push_back(0);
+	while(true){
+		ai.feedForward(itm);
+	}*/
+}
 PlayerContainer m_player;
 int main() {
-	sf::Clock clock; // starts the clock
-	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Test Window");
-	window.setFramerateLimit(30);
-	sf::View view(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
-	window.setView(view);
-	Level::instance();
-	CollisionManager* collision_manager = new CollisionManager();
-
-	Dragon* c = fc_dragon_ptr();
-	c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
-	Human* h = fc_human_ptr();
-	h->setPosition(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-	m_player = PlayerContainer(h, c);
-
-	sf::Time deltaTime = clock.getElapsedTime();
-	Stars stars = Stars();
-
-	while (window.isOpen()) {
-		deltaTime = clock.restart();
-		float deltaT = (deltaTime.asMilliseconds());
-		deltaT/=1000;
-		//std::cout<<(deltaT/1000);
-	//	std::cout<<std::endl;
-		MemoryChunk::instance()->reset();
-		sf::Event event;
-		//
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
-				window.close();
-			manageInput(event, sf::Mouse::getPosition(window));
-		}
-		view.setCenter(m_player.HUMAN->getPosition());
-		collision_manager->check_tiles();
-		EntityManager::instance()->update(deltaT);
-		window.setView(view);
-		window.clear();
-		EntityManager::instance()->draw(&window);
-//		stars.move(c->getVelocity());
-		Level::instance()->draw(&window);
-		//stars.draw(&window);
-		window.display();
+	std::string command = "game";
+	if(!command.compare("")){
+		std::cin>>command;
 	}
-	//delete c;
-	delete EntityManager::instance();
-	delete Level::instance();
-	delete collision_manager;
-	system("PAUSE");
+	if( command == ("ai")){
+		stm_main();
+	}else if(command == ("game")){
+	
+	
+		sf::Clock clock; // starts the clock
+		sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Test Window");
+		window.setFramerateLimit(30);
+		sf::View view(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+		window.setView(view);
+		Level::instance();
+		CollisionManager* collision_manager = new CollisionManager();
+
+		//Dragon* c = fc_dragon_ptr();
+		//c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
+		Human* h = fc_human_ptr();
+		h->setPosition(Level::instance()->get_origin()->get_centre() - h->get_HeightWidth());//);
+		m_player = PlayerContainer(h, NULL);
+		//h = fc_human_ptr();
+		//h->setPosition(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+		sf::Time deltaTime = clock.getElapsedTime();
+		Stars stars = Stars();
+
+		while (window.isOpen()) {
+			deltaTime = clock.restart();
+			float deltaT = (deltaTime.asMilliseconds());
+			deltaT/=1000;
+
+			//std::cout<<(deltaT/1000);
+		//	std::cout<<std::endl;
+			//MemoryChunk::instance()->reset();
+			sf::Event event;
+			//
+			while (window.pollEvent(event)) {
+				if (event.type == sf::Event::Closed)
+					window.close();
+				manageInput(event, sf::Mouse::getPosition(window));
+			}
+			view.setCenter(m_player.HUMAN->getPosition());
+			collision_manager->check_entities();
+			EntityManager::instance()->update(deltaT);
+			window.setView(view);
+			window.clear();
+			EntityManager::instance()->draw(&window);
+	//		stars.move(c->getVelocity());
+			Level::instance()->draw(&window);
+			stars.draw(&window);
+			window.display();
+		}
+		//delete c;
+		delete EntityManager::instance();
+		delete Level::instance();
+		delete collision_manager;
+		system("PAUSE");
+	}
 	return 0;
 }
 void manageInput(sf::Event event, sf::Vector2i mousePos){
@@ -114,11 +143,17 @@ void manageInput(sf::Event event, sf::Vector2i mousePos){
 
 	}
 	if(event.type == sf::Event::KeyPressed){
-		if(event.key.code == sf::Keyboard::A){
+		if(event.key.code == sf::Keyboard::Left){
 			m_player.HUMAN->move(sf::Vector2f(-1, 0));
 		}
-		if(event.key.code == sf::Keyboard::D){
+		if(event.key.code == sf::Keyboard::Right){
 			m_player.HUMAN->move(sf::Vector2f(1, 0));
+		}
+		if(event.key.code == sf::Keyboard::Up){
+			m_player.HUMAN->move(sf::Vector2f(0, -1));
+		}
+		if(event.key.code == sf::Keyboard::Down){
+			m_player.HUMAN->move(sf::Vector2f(0, 1));
 		}
 		if(event.key.code == sf::Keyboard::Space){
 			//jump

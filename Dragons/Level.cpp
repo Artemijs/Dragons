@@ -15,20 +15,26 @@ Level* Level::instance(){
 Level::Level(){
 	m_all_tiles = std::vector<Tile*>();
 	//for now just create them as even plane
-	for(int i =0; i < MAX_TILES_HORIZONTAL*10; ++i){
-		sf::Vector2f pos = sf::Vector2f(0+i*TILE_WIDTH, SCREEN_HEIGHT*0.7);
-		sf::Sprite* s = new sf::Sprite(
-			*GraphicsManager::instance()->
-			get_texture(TextureID::TILE_TEXTURE));
-		s->setPosition(pos);
-		Tile* t = new Tile();
-		t->set_sprite(s);
-		m_all_tiles.push_back(t);
+	for(int i =0; i < MAX_TILES_HORIZONTAL; ++i){
+		for(int j =0; j < MAX_TILES_VERTICAL; ++j){
+			sf::Vector2f pos = sf::Vector2f(0+i*TILE_WIDTH, j*TILE_HEIGHT);
+			sf::Sprite* s = new sf::Sprite(
+				*GraphicsManager::instance()->
+				get_texture(TextureID::TILE_TEXTURE));
+			s->setPosition(pos);
+			s->setScale(TILE_WIDTH/s->getGlobalBounds().width, TILE_HEIGHT/s->getGlobalBounds().height);
+			s->setColor(sf::Color(255, 255, 255 ,55));
+			std::cout<<s->getGlobalBounds().width<<"\n";
+			Tile* t = new Tile();
+			t->set_sprite(s);
+			m_all_tiles.push_back(t);
+		}
 	}
-	for(int i =0; i <10; i++){
+
+	/*for(int i =0; i <10; i++){
 		sf::Vector2f v = sf::Vector2f(math_random_range(6000, 0), SCREEN_HEIGHT/2);
 		m_all_spawn.push_back(new SpawnPoint(v));
-	}
+	}*/
 }
 
 Level::~Level(){
@@ -53,6 +59,36 @@ void Level::draw(sf::RenderWindow* window){
 	for(int i =0; i < m_all_tiles.size(); i++){
 		window->draw((*m_all_tiles[i]->get_sprite()));
 	}
+}
+void Level::create_graph(){
+	std::vector<Tile*>::iterator tile = m_all_tiles.begin(); 
+	std::vector<Tile*>::iterator end = m_all_tiles.end();
+	int i =0;
+	for(;tile != end; tile++){
+		//get neighbours```
+		//set neighbours
+		if(i != 0)
+			(*tile)->set_neighbor(TILE_NEIGHBORS::LEFT, m_all_tiles[i-1]);
+		if(i + MAX_TILES_HORIZONTAL < m_all_tiles.size())
+			(*tile)->set_neighbor(TILE_NEIGHBORS::UP, m_all_tiles[i + MAX_TILES_HORIZONTAL]);
+		if(i < m_all_tiles.size()) 
+			(*tile)->set_neighbor(TILE_NEIGHBORS::RIGHT, m_all_tiles[i + 1]);
+		if(i - MAX_TILES_HORIZONTAL >=0)
+			(*tile)->set_neighbor(TILE_NEIGHBORS::DOWN, m_all_tiles[i - MAX_TILES_HORIZONTAL]);
+		//move on
+		i++;
+	}
+}
+Tile* Level::get_origin(){
+	return m_all_tiles[MAX_TILES_HORIZONTAL*3+5];
+}
+
+
+Tile* Tile::get_neighbor(TILE_NEIGHBORS tile_n){
+	return m_neighbours[tile_n];
+}
+void Tile::set_neighbor( TILE_NEIGHBORS tile_n, Tile* n){
+	m_neighbours[tile_n] = n;
 }
 std::vector<Tile*>::iterator Level::get_beign(){
 	return m_all_tiles.begin();
@@ -84,4 +120,12 @@ void SpawnPoint::update(float deltaTime){
 		}
 	}
 	//and maybe respawn him when he is too far from spawn point... later 
+}
+
+sf::Vector2f Tile::get_centre(){
+	return m_sprite->getPosition()
+		+sf::Vector2f(
+		m_sprite->getGlobalBounds().width/2,
+		m_sprite->getGlobalBounds().height/2
+		);
 }
