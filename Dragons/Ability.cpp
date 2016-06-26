@@ -2,6 +2,8 @@
 #include "Macros.h"
 #include "EntityManager.h"
 #include "Math.h"
+#include "Level.h"
+#include "CollisionManager.h"
 //////////////////////////////////ability class//////////////////////
 Ability::Ability(int myid): m_my_id(myid){
 	//default ability
@@ -211,4 +213,180 @@ void Projectile::set_position(sf::Vector2f pos){
 }
 void Projectile::set_velocity(sf::Vector2f vel){
 	m_velocity = vel;
+}
+
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////Movement class///////////////////////////
+////////////////////////////////////////////////////////////////////////////
+Ability_Movement::Ability_Movement(int myid): Ability(myid){
+	m_alive = false;
+	m_damage = 0;
+	m_cast_speed_max = 0.1;//third of a second
+	m_cast_speed_time=0;
+	m_mana_cost = 0;
+	m_cool_down_max = 0;
+	m_cool_down_current = 0;
+	m_range = 1;
+	m_target_id = -1;
+	m_target = 0;
+	m_state = Ability_State::READY;
+}
+Ability_Movement::~Ability_Movement(){
+	
+}
+void Ability_Movement::cast(int targetId){
+	if(m_state != Ability_State::READY) return;
+	//get the target id of the tile 
+	//use range as number of tiles to move
+	int range = m_range;
+	//get current tile
+	Tile* n = Level::instance()->
+		get_tile(EntityManager::instance()->getEntity(m_my_id)->get_tile());
+	while(range!=0){
+		Tile* t = n->get_neighbor(TILE_NEIGHBORS(targetId));
+		if(t == 0) break; // stop looping if reached edge of map
+		n = t;
+		range--;
+	}
+	if(n == 0) return;
+	m_target_id = n->get_id();
+	
+}
+void Ability_Movement::cast(sf::Vector2f* target){
+
+}
+void Ability_Movement::update(float deltaTime){
+	//std::cout<<"state "<<m_state<<" "<<m_target_id<<"\n";
+	//std::cout<<"cooldown :"<<m_cool_down_current<<" \n";
+	if(m_state == Ability_State::READY ){
+		if(m_target_id != -1){
+			//this is where you would turn to target
+			m_state=Ability_State::CHARGING;
+		}
+	}
+	if ( m_state == Ability_State::CHARGING){
+		m_cast_speed_time+=deltaTime;
+		if(m_cast_speed_time >= m_cast_speed_max){
+			m_state = Ability_State::ACTION;
+			m_cast_speed_time=0;
+		}
+	}
+	if( m_state == Ability_State::ACTION){
+		bool action_finished = action();
+		if(action_finished){
+			m_state = Ability_State::COOLDOWN;
+			EntityManager::instance()->getEntity(m_my_id)->set_tile(m_target_id);
+			m_target_id = -1;
+		}
+	}
+	if( m_state == Ability_State::COOLDOWN){ //cooldown state
+		if( m_cool_down_current <m_cool_down_max){
+			m_cool_down_current += deltaTime;
+		}
+		else{
+			m_cool_down_current=0;
+			m_target_id=-1;
+			m_state = Ability_State::READY;
+			m_already_hit_ents.clear();
+			
+		}
+	}
+}
+void Ability_Movement::draw(sf::RenderWindow* window){
+
+}
+
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////STEP class///////////////////////////
+////////////////////////////////////////////////////////////////////////////
+Ability_Step::Ability_Step(int myid): Ability_Movement(myid){
+
+}
+Ability_Step::~Ability_Step(){
+}
+bool Ability_Step::action(){
+	bool over= false;
+	Entity* me = EntityManager::instance()->getEntity(m_my_id);
+	Tile* tile = Level::instance()->get_tile(m_target_id);
+	float move_spid = me->get_stats()->get_stat(Stat_Type::MOVE_SPEED);
+	sf::Vector2f vel =
+		math_get_direction(me->getPosition()+me->get_HeightWidth(), tile->get_centre())* move_spid;
+	me->move_hard(vel);
+	float dist = math_get_distance(me->getPosition()+me->get_HeightWidth(), tile->get_centre());
+	//std::cout<<dist<<"  "<<vel.x<<" "<<vel.y<<"\n";
+	return (dist <2.3);
+}
+
+
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////BLINK class///////////////////////////
+////////////////////////////////////////////////////////////////////////////
+Ability_Blink::Ability_Blink(int myid): Ability_Movement(myid){
+	m_alive = false;
+	m_damage = 0;
+	m_cast_speed_max = 0.1;//third of a second
+	m_cast_speed_time=0;
+	m_mana_cost = 0;
+	m_cool_down_max = 1;
+	m_cool_down_current = 0;
+	m_range = 1;
+	m_target_id = -1;
+	m_target = 0;
+	m_state = Ability_State::READY;
+}
+Ability_Blink::~Ability_Blink(){
+}
+bool Ability_Blink::action(){
+	//teleport the player to the target instantly 
+	bool over= false;
+	Entity* me = EntityManager::instance()->getEntity(m_my_id);
+	Tile* tile = Level::instance()->get_tile(m_target_id);
+	me->setPosition(tile->get_centre() - me->get_HeightWidth());
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////Strike class///////////////////////////
+////////////////////////////////////////////////////////////////////////////
+Ability_Lance::Ability_Lance(int myid): Ability_Movement(myid){
+	m_alive = false;
+	m_damage = 100;
+	m_cast_speed_max = 0.1;//third of a second
+	m_cast_speed_time=0;
+	m_mana_cost = 0;
+	m_cool_down_max = 1;
+	m_cool_down_current = 0;
+	m_range = 3;
+	m_target_id = -1;
+	m_target = 0;
+	m_state = Ability_State::READY;
+}
+Ability_Lance::~Ability_Lance(){
+}
+bool Ability_Lance::action(){
+	//move towards taget and damage anything you contact with
+	Entity* me = EntityManager::instance()->getEntity(m_my_id);
+	Tile* tile = Level::instance()->get_tile(m_target_id);
+	float move_spid = me->get_stats()->get_stat(Stat_Type::MOVE_SPEED);
+	sf::Vector2f vel =
+		math_get_direction(me->getPosition()+me->get_HeightWidth(), tile->get_centre())* move_spid;
+	me->move_hard(vel);
+	float dist = math_get_distance(me->getPosition()+me->get_HeightWidth(), tile->get_centre());
+	//std::cout<<dist<<"  "<<vel.x<<" "<<vel.y<<"\n";
+	Entity* ent = CollisionManager::instance()->check_collision_ents(me);
+	if(ent!= 0){
+		bool hit = false;
+		for(int i = 0; i < m_already_hit_ents.size(); ++i){
+			if(m_already_hit_ents[i] == ent->get_id()){
+				//already dealt damage to that entity
+				hit = true;
+			}
+		}
+		if(!hit){//do damage and remember this entity
+			ent->take_damage(m_damage);
+			m_already_hit_ents.push_back(ent->get_id());
+			std::cout<<"collided with \n";
+		}
+	}
+	return (dist <2.3);
 }

@@ -1,4 +1,6 @@
 #include "Dragon.h"
+#include "Level.h"
+#include "Math.h"
 /*
 to do:
 hp below zero
@@ -68,10 +70,21 @@ Human::~Human(){
 	//delete m_stats;
 }
 void Human::update(float deltaTime){
-	m_position +=  m_direction*m_stats->get_stat(Stat_Type::MOVE_SPEED); //gravity, ill rework this
-	(*m_all_abilities)[0]->update(deltaTime);
-	setPosition(m_position);
-	m_direction=sf::Vector2f(0,0);
+	if(m_nextState != m_state && m_state == EntityState::IDLE)
+		next_action();
+	sf::Vector2f target = Level::instance()->get_tile(m_current_tile)->get_centre();
+	float dist = math_get_distance(target, m_position + get_HeightWidth());
+	if(dist < 2.1f && m_state != EntityState::IDLE) {
+		next_action();
+	}
+	if(m_state == EntityState::MOVING){
+		m_direction = math_get_direction(m_position + get_HeightWidth(), target);
+		m_position +=  m_direction*m_stats->get_stat(Stat_Type::MOVE_SPEED); //gravity, ill rework this
+		setPosition(m_position);
+		m_direction=sf::Vector2f(0,0);
+	}
+	for(int i =0; i < (*m_all_abilities).size();++i)
+		(*m_all_abilities)[i]->update(deltaTime);
 	update_visual();
 }
 void Human::update_visual(){
@@ -81,16 +94,10 @@ void Human::draw(sf::RenderWindow* window){
 	window->draw(m_rect);
 	(*m_all_abilities)[0]->draw(window);
 }
-void Human::move(sf::Vector2f direction){
-	m_direction = direction;
-}
 void Human::use_ability(int target, int aIndex){
 	Ability* ab = (*m_all_abilities)[aIndex];
 	if(ab->get_state() != Ability_State::READY) return;
 	m_stats->lose_mana(ab->get_mana_cost());
+	std::cout<<"casting"<<"\n";
 	ab->cast(target);
-}
-sf::Vector2f Human::get_HeightWidth(){
-	return sf::Vector2f(m_rect.getGlobalBounds().width/2,
-		m_rect.getGlobalBounds().height/2);
 }

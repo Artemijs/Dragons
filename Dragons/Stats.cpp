@@ -10,7 +10,7 @@ const float Stats::BASE_AGI = 1;
 const float Stats::BASE_ARMOR = 0.1;
 const float Stats::BASE_ATTACK_SPEED = 1.5f;
 const float Stats::MAX_ATTACK_SPEED = 0.2;
-const float Stats::BASE_MOVE_SPEED = 3;
+const float Stats::BASE_MOVE_SPEED = 5;
 const float Stats::MAX_MOVE_SPEED = 10;
 Stats::Stats(float dmg, float intel, float str, float agi, float int2mana, float int2mreg,
 	float str2hp, float str2hpreg, float agi2armor, float agi2attSpeed, float movspid){

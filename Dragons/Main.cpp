@@ -13,7 +13,8 @@
 #include "Factory.h"
 #include "PlayerContainer.h"
 #include "AI.h"
-void manageInput(sf::Event event, sf::Vector2i mousePos);
+#include "InputManager.h"
+void manageInput();
 class Star{
 private:
 	sf::CircleShape shape;
@@ -88,13 +89,18 @@ int main() {
 		sf::View view(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
 		window.setView(view);
 		Level::instance();
-		CollisionManager* collision_manager = new CollisionManager();
+		
 
 		//Dragon* c = fc_dragon_ptr();
 		//c->setPosition(sf::Vector2f(50, SCREEN_HEIGHT/2));
 		Human* h = fc_human_ptr();
 		h->setPosition(Level::instance()->get_origin()->get_centre() - h->get_HeightWidth());//);
+		h->set_tile(Level::instance()->get_origin()->get_id());
 		m_player = PlayerContainer(h, NULL);
+
+		h = fc_human_ptr();
+		h->setPosition(Level::instance()->get_tile(15)->get_centre() - h->get_HeightWidth());//);
+		h->set_tile(Level::instance()->get_tile(15)->get_id());
 		//h = fc_human_ptr();
 		//h->setPosition(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
 		sf::Time deltaTime = clock.getElapsedTime();
@@ -113,11 +119,14 @@ int main() {
 			while (window.pollEvent(event)) {
 				if (event.type == sf::Event::Closed)
 					window.close();
-				manageInput(event, sf::Mouse::getPosition(window));
+				InputManager::instance()->update(event, sf::Mouse::getPosition(window));
+				
 			}
-			view.setCenter(m_player.HUMAN->getPosition());
-			collision_manager->check_entities();
+			
+			//view.setCenter(m_player.HUMAN->getPosition());
+			//CollisionManager::instance()->check_entities();
 			EntityManager::instance()->update(deltaT);
+			manageInput();
 			window.setView(view);
 			window.clear();
 			EntityManager::instance()->draw(&window);
@@ -129,45 +138,57 @@ int main() {
 		//delete c;
 		delete EntityManager::instance();
 		delete Level::instance();
-		delete collision_manager;
+		delete CollisionManager::instance();
 		system("PAUSE");
 	}
 	return 0;
 }
-void manageInput(sf::Event event, sf::Vector2i mousePos){
-	
-	if(event.type == sf::Event::MouseButtonPressed){
-		//EntityManager::instance()->getEntity(0)->setPosition(sf::Vector2f(mousePos.x, mousePos.y));
-	}
-	if(event.type == sf::Event::MouseButtonReleased){
+void manageInput(){
+	AbilityIndex ability = AbilityIndex::NO_SPELL;
+	if(InputManager::instance()->get_key(sf::Keyboard::Q))
+		ability = AbilityIndex::SPELL2;
+	if(InputManager::instance()->get_key(sf::Keyboard::W))
+		ability = AbilityIndex::SPELL3;
+	bool spell = (ability != AbilityIndex::NO_SPELL);
+	TILE_NEIGHBORS dir = TILE_NEIGHBORS::NONE;
 
+	if(InputManager::instance()->get_key(sf::Keyboard::Left)){
+			//m_player.HUMAN->move(TILE_NEIGHBORS::LEFT);
+		dir = TILE_NEIGHBORS::LEFT;
 	}
-	if(event.type == sf::Event::KeyPressed){
-		if(event.key.code == sf::Keyboard::Left){
-			m_player.HUMAN->move(sf::Vector2f(-1, 0));
-		}
-		if(event.key.code == sf::Keyboard::Right){
-			m_player.HUMAN->move(sf::Vector2f(1, 0));
-		}
-		if(event.key.code == sf::Keyboard::Up){
-			m_player.HUMAN->move(sf::Vector2f(0, -1));
-		}
-		if(event.key.code == sf::Keyboard::Down){
-			m_player.HUMAN->move(sf::Vector2f(0, 1));
-		}
-		if(event.key.code == sf::Keyboard::Space){
-			//jump
-		}
+	if(InputManager::instance()->get_key(sf::Keyboard::Right)){
+		//m_player.HUMAN->move(TILE_NEIGHBORS::RIGHT);
+		dir = TILE_NEIGHBORS::RIGHT;
 	}
-	if(event.type == sf::Event::KeyReleased){
-		if(event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::D)
-			m_player.HUMAN->move(sf::Vector2f(0, 0));
+	if(InputManager::instance()->get_key(sf::Keyboard::Up)){
+		//m_player.HUMAN->move(TILE_NEIGHBORS::UP);
+		dir = TILE_NEIGHBORS::UP;
 	}
-	if (event.type == sf::Event::MouseWheelMoved){
-
+	if(InputManager::instance()->get_key(sf::Keyboard::Down)){
+		//m_player.HUMAN->move(TILE_NEIGHBORS::DOWN);
+		dir = TILE_NEIGHBORS::DOWN;
 	}
+	if(dir != TILE_NEIGHBORS::NONE)
+		if(!spell){
+			m_player.HUMAN->move(dir);
+		}
+		else{
+		
+			m_player.HUMAN->use_ability(dir, ability);
+		}
 }
+/*
+	known minor bugs:
+		abilities dont use mana afaik
+		abilities casting at the same time, uses old tile id and jump to wrong location
+		collision with 2 players
+		dealing damage once and not while collided
+		movement is still buggy
+		out of health 
+		out of mana
+		
 
+*/
 /*
 	list of shit that could use optimization
 		collision detection
@@ -176,4 +197,11 @@ void manageInput(sf::Event event, sf::Vector2i mousePos){
 /*
 	list of shit that would be a "quality of life" fix
 		entity factory
+		change m_my_id to caster id to avoid confusion
+*/
+/*
+	list of regrets:
+		Entity inheritance is all messed up 
+		I dont know how to do the movement, idk why but it confuses me profoundly
+
 */

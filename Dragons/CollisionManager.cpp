@@ -1,5 +1,11 @@
 #include "CollisionManager.h"
 #include "Macros.h"
+CollisionManager* CollisionManager::m_instance=0;
+CollisionManager* CollisionManager::instance(){
+	if(m_instance == 0)
+		m_instance = new CollisionManager();
+	return m_instance;
+}
 void CollisionManager::check_tiles(){
 	//check collision for each entity between each tile for now
 	//some time later i can optimize this
@@ -12,7 +18,6 @@ void CollisionManager::check_tiles(){
 	//for every entity
 	for(begin_ent; begin_ent != end_ent; begin_ent++){
 		//for every tile
-		
 		for(std::vector<Tile*>::iterator b_tile = begin_tile; b_tile != end_tile; b_tile++){
 			//std::cout<<(*begin_ent)<<" \n";
 			if((*b_tile)->get_sprite()->getGlobalBounds().intersects(
@@ -165,4 +170,17 @@ void CollisionManager::collision_response( Entity* t, Entity* entity){
 	entity->move_hard(sf::Vector2f(0, -GRAVITY));
 	entity->update_visual();
 
+}
+Entity* CollisionManager::check_collision_ents(Entity* ent){
+	std::vector<Entity*>::iterator begin_ent = EntityManager::instance()->get_beign();
+	std::vector<Entity*>::iterator end_ent = EntityManager::instance()->get_end();
+	//for every entity
+	for(begin_ent; begin_ent != end_ent; begin_ent++){
+		if(ent != (*begin_ent))
+			if(ent->getRect()->getGlobalBounds().intersects(
+					(*begin_ent)->getRect()->getGlobalBounds())){
+						return (*begin_ent);
+			}
+	}
+	return 0;
 }

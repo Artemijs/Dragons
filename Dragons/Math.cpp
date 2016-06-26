@@ -1,4 +1,5 @@
 #include "Math.h"
+#include "Macros.h"
 float math_get_lenght(sf::Vector2f vector){
 	return std::sqrt((vector.x * vector.x) + (vector.y * vector.y));
 }
@@ -7,6 +8,7 @@ sf::Vector2f math_normalize(sf::Vector2f vector){
 	return sf::Vector2f(vector.x/len, vector.y/len);	
 }
 sf::Vector2f math_get_direction(sf::Vector2f one, sf::Vector2f two){
+	if(one == two) return VECTOR_ZERO;
 	return math_normalize(two-one);
 }
 float math_get_distance(sf::Vector2f one, sf::Vector2f two){

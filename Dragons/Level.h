@@ -34,15 +34,17 @@ enum TILE_NEIGHBORS{
 	LEFT,
 	UP,
 	RIGHT,
-	DOWN
+	DOWN,
+	NONE
 };
 class Tile{
 private:
 	sf::Sprite* m_sprite;//later an animated sprite
 	std::vector<Tile*> m_neighbours;
+	int m_id;
 	//neighbour tiles
 public:
-	Tile(){}
+	Tile(int id);
 	~Tile();
 	sf::Vector2f get_position(){return m_sprite->getPosition();}
 	sf::Sprite* get_sprite(){return m_sprite;}
@@ -52,6 +54,7 @@ public:
 	}
 	Tile* get_neighbor(TILE_NEIGHBORS tile_n);
 	void set_neighbor( TILE_NEIGHBORS tile_n, Tile* n);
+	int get_id(){return m_id;}
 };
 
 
@@ -71,5 +74,6 @@ public:
 	Tile* get_origin();
 	std::vector<Tile*>::iterator get_beign();
 	std::vector<Tile*>::iterator get_end();
+	Tile* get_tile(int id){return m_all_tiles[id];}
 };
 #endif

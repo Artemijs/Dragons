@@ -25,12 +25,12 @@ Level::Level(){
 			s->setScale(TILE_WIDTH/s->getGlobalBounds().width, TILE_HEIGHT/s->getGlobalBounds().height);
 			s->setColor(sf::Color(255, 255, 255 ,55));
 			std::cout<<s->getGlobalBounds().width<<"\n";
-			Tile* t = new Tile();
+			Tile* t = new Tile(m_all_tiles.size());
 			t->set_sprite(s);
 			m_all_tiles.push_back(t);
 		}
 	}
-
+	create_graph();
 	/*for(int i =0; i <10; i++){
 		sf::Vector2f v = sf::Vector2f(math_random_range(6000, 0), SCREEN_HEIGHT/2);
 		m_all_spawn.push_back(new SpawnPoint(v));
@@ -68,24 +68,30 @@ void Level::create_graph(){
 		//get neighbours```
 		//set neighbours
 		if(i != 0)
-			(*tile)->set_neighbor(TILE_NEIGHBORS::LEFT, m_all_tiles[i-1]);
+			(*tile)->set_neighbor(TILE_NEIGHBORS::UP, m_all_tiles[i-1]);
 		if(i + MAX_TILES_HORIZONTAL < m_all_tiles.size())
-			(*tile)->set_neighbor(TILE_NEIGHBORS::UP, m_all_tiles[i + MAX_TILES_HORIZONTAL]);
-		if(i < m_all_tiles.size()) 
-			(*tile)->set_neighbor(TILE_NEIGHBORS::RIGHT, m_all_tiles[i + 1]);
+			(*tile)->set_neighbor(TILE_NEIGHBORS::RIGHT, m_all_tiles[i + MAX_TILES_HORIZONTAL]);
+		if(i + 1 < m_all_tiles.size()) 
+			(*tile)->set_neighbor(TILE_NEIGHBORS::DOWN, m_all_tiles[i + 1]);
 		if(i - MAX_TILES_HORIZONTAL >=0)
-			(*tile)->set_neighbor(TILE_NEIGHBORS::DOWN, m_all_tiles[i - MAX_TILES_HORIZONTAL]);
+			(*tile)->set_neighbor(TILE_NEIGHBORS::LEFT, m_all_tiles[i - MAX_TILES_HORIZONTAL]);
 		//move on
 		i++;
 	}
 }
+
 Tile* Level::get_origin(){
-	return m_all_tiles[MAX_TILES_HORIZONTAL*3+5];
+	return m_all_tiles[0];
 }
 
-
+Tile::Tile(int id): m_id(id){
+	m_neighbours.push_back(0);
+	m_neighbours.push_back(0);
+	m_neighbours.push_back(0);
+	m_neighbours.push_back(0);
+}
 Tile* Tile::get_neighbor(TILE_NEIGHBORS tile_n){
-	return m_neighbours[tile_n];
+	return m_neighbours[tile_n];//fuck you then
 }
 void Tile::set_neighbor( TILE_NEIGHBORS tile_n, Tile* n){
 	m_neighbours[tile_n] = n;

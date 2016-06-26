@@ -55,6 +55,13 @@ FLY
 #define DRAGON_H
 #include "Entity.h"
 #include "SFML\Graphics.hpp"
+enum AbilityIndex{
+	SPELL1,
+	SPELL2,
+	SPELL3,
+	SPELL4,
+	NO_SPELL
+};
 class Dragon: public Entity{
 private:
 	float m_angle;
@@ -69,6 +76,7 @@ public:
 	void setPosition(sf::Vector2f newPos);
 	void update_visual();
 };
+
 class Human: public Entity{
 public:
 	Human(int id);
@@ -76,9 +84,8 @@ public:
 	void update(float deltaTime);
 	void update_visual();
 	void draw(sf::RenderWindow* window);
-	void move(sf::Vector2f direction);
 	void use_ability(int target, int aIndex);
-	sf::Vector2f get_HeightWidth();
+	
 };
 #endif
 

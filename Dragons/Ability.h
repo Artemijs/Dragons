@@ -14,6 +14,12 @@ Aerlingus
 Sun, 5 Jun 05:55 - 08:40 EI 602
 Sun, 12 Jun 20:35 - 21:20 EI 611
 */
+/*
+single target spells, target id = tile id that you move to 
+aoe spells, target id = tile id where the spells is cast on
+
+need to remove the vector 2 targetting 
+*/
 
 #ifndef ABILITY_H
 #define ABILITY_H
@@ -35,14 +41,18 @@ protected:
 	float m_mana_cost;
 	float m_cool_down_max;
 	float m_cool_down_current;
-	int m_my_id;
+	int m_my_id;// id of owner of the spell
 	float m_range;//of spell
 	//sf::Vector2f* m_my_position;//position of the caster
 	int m_target_id;// location in the all entities array 
 	sf::Vector2f* m_target;//strictly for aoe spells, because they can be ground targetted
 	Ability_State m_state;
+	std::vector<int> m_already_hit_ents;//entities that you have already damaged during the current casting of the spell
+	//clear this vector after the casting is finished
 public :
-	Ability(){}
+	Ability(){
+		//m_already_hit_ents = std::vector<Entity*>();
+	}
 	~Ability(){}
 	Ability(int myid);
 	virtual void cast(int targetId) = 0;
@@ -142,4 +152,43 @@ class Ability_Aura: public Ability{
 */
 };
 
+class Ability_Movement: public Ability{
+/*
+	Super simple, move to target position over time,
+	using owner of the spells stats for move speed,
+	0 cooldown
+	0 cast time
+	0 manacost
+	just a basic move 
+*/
+public:
+	Ability_Movement(int myid);
+	~Ability_Movement();
+	void cast(int targetId);
+	void cast(sf::Vector2f* target);
+	void update(float deltaTime);//move the user of ability to target
+	//once there the spell is finished casting
+	void draw(sf::RenderWindow* window);//not really used
+	virtual bool action() = 0;
+	//asides from maybe some fancyanimation
+};
+class Ability_Step: public Ability_Movement{
+public:
+	Ability_Step(int myid);
+	~Ability_Step();
+	bool action();
+
+};
+class Ability_Blink: public Ability_Movement{
+public:
+	Ability_Blink(int myid);
+	~Ability_Blink();
+	bool action();
+};
+class Ability_Lance: public Ability_Movement{
+public:
+	Ability_Lance(int myid);
+	~Ability_Lance();
+	bool action();
+};
 #endif

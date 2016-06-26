@@ -53,9 +53,11 @@ bool EntityManager::in_range(int myId, int targetId, float range){
 	return (math_get_distance(one, two)<range);
 }
 void EntityManager::move_towards(int myId, int targetId){
-	Entity* one = (*m_all_entities)[myId];
+	assert("move_towards currently not in use");
+	/*Entity* one = (*m_all_entities)[myId];
 	sf::Vector2f two = (*m_all_entities)[targetId]->getPosition();
 	one->move(math_get_direction(one->getPosition(), two));
+	*/
 }
 bool EntityManager::in_range(int myId, sf::Vector2f* pos, float range){
 	sf::Vector2f one = (*m_all_entities)[myId]->getPosition();
@@ -63,7 +65,7 @@ bool EntityManager::in_range(int myId, sf::Vector2f* pos, float range){
 	return (math_get_distance(one, (*pos))<range);
 }
 void EntityManager::move_towards(int myId, sf::Vector2f* m_pos){
-	assert(true);
+	assert("move_towards currently not in use");
 }
 sf::Vector2f EntityManager::get_direction(int myId, int targetId){
 	sf::Vector2f one = (*m_all_entities)[myId]->getPosition();
