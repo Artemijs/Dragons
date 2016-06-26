@@ -275,7 +275,9 @@ void Ability_Movement::update(float deltaTime){
 		bool action_finished = action();
 		if(action_finished){
 			m_state = Ability_State::COOLDOWN;
-			EntityManager::instance()->getEntity(m_my_id)->set_tile(m_target_id);
+			Entity* ent = EntityManager::instance()->getEntity(m_my_id);
+			ent->set_tile(m_target_id);
+			ent->set_state(EntityState::IDLE);
 			m_target_id = -1;
 		}
 	}
@@ -356,7 +358,7 @@ Ability_Lance::Ability_Lance(int myid): Ability_Movement(myid){
 	m_mana_cost = 0;
 	m_cool_down_max = 1;
 	m_cool_down_current = 0;
-	m_range = 3;
+	m_range = 2;
 	m_target_id = -1;
 	m_target = 0;
 	m_state = Ability_State::READY;

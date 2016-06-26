@@ -26,10 +26,12 @@ void Entity::setDirection(sf::Vector2f newDir){
 }
 
 void Entity::move(int newTile){
+	if(m_state != EntityState::IDLE) return;
 	/*Tile* neighbour = Level::instance()->
 		get_tile(m_current_tile)->get_neighbor(TILE_NEIGHBORS(newTile));
 	if(neighbour == 0)return;*/
 	(*m_all_abilities)[0]->cast(newTile);
+	set_state(EntityState::CASTING);
 	/*if(set_state(EntityState::MOVING))return;//dont move if performing other action
 	Tile* neighbor = Level::instance()->
 		get_tile(m_current_tile)->get_neighbor(TILE_NEIGHBORS(newTile));
@@ -63,9 +65,8 @@ void Entity::respawn(sf::Vector2f pos){
 	next_action();
 }
 bool Entity::set_state(EntityState newState){
-	m_nextState = newState;
-	
-	return (m_state == m_nextState);
+	m_state = newState;
+	return true;
 }
 void Entity::next_action(){
 	m_state = m_nextState;

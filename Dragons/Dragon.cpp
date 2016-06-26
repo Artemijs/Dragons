@@ -46,11 +46,11 @@ void Dragon::move(sf::Vector2f dir){
 	m_direction = dir;
 }
 void Dragon::use_ability(int target, int aIndex){
-	
 	Ability* ab = (*m_all_abilities)[aIndex];
 	if(ab->get_state() != Ability_State::READY) return;
 	m_stats->lose_mana(ab->get_mana_cost());
 	ab->cast(target);
+	m_state = EntityState::CASTING;
 }
 void Dragon::setPosition(sf::Vector2f newPos){
 	Entity::setPosition(newPos);
@@ -70,19 +70,6 @@ Human::~Human(){
 	//delete m_stats;
 }
 void Human::update(float deltaTime){
-	if(m_nextState != m_state && m_state == EntityState::IDLE)
-		next_action();
-	sf::Vector2f target = Level::instance()->get_tile(m_current_tile)->get_centre();
-	float dist = math_get_distance(target, m_position + get_HeightWidth());
-	if(dist < 2.1f && m_state != EntityState::IDLE) {
-		next_action();
-	}
-	if(m_state == EntityState::MOVING){
-		m_direction = math_get_direction(m_position + get_HeightWidth(), target);
-		m_position +=  m_direction*m_stats->get_stat(Stat_Type::MOVE_SPEED); //gravity, ill rework this
-		setPosition(m_position);
-		m_direction=sf::Vector2f(0,0);
-	}
 	for(int i =0; i < (*m_all_abilities).size();++i)
 		(*m_all_abilities)[i]->update(deltaTime);
 	update_visual();
@@ -95,9 +82,11 @@ void Human::draw(sf::RenderWindow* window){
 	(*m_all_abilities)[0]->draw(window);
 }
 void Human::use_ability(int target, int aIndex){
+	if(m_state != EntityState::IDLE)return;
 	Ability* ab = (*m_all_abilities)[aIndex];
 	if(ab->get_state() != Ability_State::READY) return;
 	m_stats->lose_mana(ab->get_mana_cost());
 	std::cout<<"casting"<<"\n";
 	ab->cast(target);
+	m_state = EntityState::CASTING;
 }

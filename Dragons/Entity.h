@@ -13,7 +13,6 @@ typedef void (*fptr)(int id, float args[]);
 
 enum EntityState{
 	IDLE,
-	MOVING,
 	CASTING,
 	DEAD
 };

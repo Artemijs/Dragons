@@ -180,7 +180,7 @@ void manageInput(){
 /*
 	known minor bugs:
 		abilities dont use mana afaik
-		abilities casting at the same time, uses old tile id and jump to wrong location
+		uses old tile id and jump to wrong location
 		collision with 2 players
 		dealing damage once and not while collided
 		movement is still buggy
