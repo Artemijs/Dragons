@@ -2,7 +2,7 @@
 #define ENTITYMANAGER_H
 #include "Dragon.h"
 #include <vector>
-
+#include "AI.h"
 class EntityManager{
 private:
 	std::vector<Entity*>* m_all_entities;
@@ -10,12 +10,13 @@ private:
 	int m_entities_count;
 	static EntityManager* m_instance;
 	EntityManager();
-	
+	BasicAI m_ai;
 public:
 	~EntityManager();
 	static EntityManager* instance();
 	int addEntity(Entity *ent);
 	int addEnemy(Entity *ent);
+	int get_count(){return m_all_entities->size();}
 	Entity* getEntity(int entId);
 	void update(float deltaTime);
 	void draw(sf::RenderWindow* window);

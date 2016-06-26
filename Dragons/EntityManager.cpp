@@ -6,6 +6,7 @@ EntityManager::EntityManager(){
 	m_all_entities = new std::vector<Entity*>();
 	m_all_npc_enemy= new std::vector<Entity*>();
 	m_entities_count=0;
+	m_ai = BasicAI();
 }
 EntityManager::~EntityManager(){
 	std::cout<<" deleting ent manager \n";
@@ -23,6 +24,9 @@ void EntityManager::update(float deltaTime){
 	std::vector<Entity*>::iterator end = m_all_entities->end();
 	for(; it != end; it++){
 		(*it)->update(deltaTime);
+		if((*it)->get_id() !=0){
+			m_ai.new_move((*it), (*m_all_entities)[0]);
+		}
 	}
 }
 void EntityManager::draw(sf::RenderWindow* window){

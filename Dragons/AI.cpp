@@ -1,4 +1,7 @@
 #include "AI.h"
+#include "Math.h"
+#include "Level.h"
+#include "Macros.h"
 void getTarget(int i ,vector<double> & target);
 AI::AI(){
 	vector<unsigned> topology;
@@ -62,4 +65,37 @@ void getTarget(int i, vector<double> & target){
 	//if(nr == 0) target.push_back(0.5);
 	//if(nr == 4) target.push_back(1);
 	//else target.push_back(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void BasicAI::new_move(Entity* me, Entity* target){
+	int ability_index = 0;
+	//get direction
+	sf::Vector2f dir = math_get_direction(me->getPosition(), target->getPosition());
+	//change direction to move
+	TILE_NEIGHBORS direction = math_get_TN_from_dir(dir);
+	bool inine=((dir.x < 0.1 && dir.x> -0.1) || (dir.y < 0.1 && dir.y > -0.1));
+	if(inine){
+		float dist = math_get_distance(me->getPosition(), target->getPosition());
+		if(direction == TILE_NEIGHBORS::RIGHT || direction == TILE_NEIGHBORS::LEFT){
+			dist /= TILE_WIDTH;
+		}
+		else{
+			dist /= TILE_HEIGHT;
+		}
+		if(dist < 3){
+			ability_index = 2;
+		}
+	}
+	me->use_ability(direction, ability_index);
 }

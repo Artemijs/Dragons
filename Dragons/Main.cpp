@@ -100,7 +100,8 @@ int main() {
 
 		h = fc_human_ptr();
 		h->setPosition(Level::instance()->get_tile(15)->get_centre() - h->get_HeightWidth());//);
-		h->set_tile(Level::instance()->get_tile(15)->get_id());
+		int id = Level::instance()->get_tile(15)->get_id();
+		h->set_tile(id);
 		//h = fc_human_ptr();
 		//h->setPosition(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
 		sf::Time deltaTime = clock.getElapsedTime();
@@ -198,6 +199,8 @@ void manageInput(){
 	list of shit that would be a "quality of life" fix
 		entity factory
 		change m_my_id to caster id to avoid confusion
+		macros starting with MAC_ so that i dont have to open up the file everytime
+			or maybe just not use them at all
 */
 /*
 	list of regrets:

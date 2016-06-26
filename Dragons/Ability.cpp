@@ -369,7 +369,7 @@ bool Ability_Lance::action(){
 	//move towards taget and damage anything you contact with
 	Entity* me = EntityManager::instance()->getEntity(m_my_id);
 	Tile* tile = Level::instance()->get_tile(m_target_id);
-	float move_spid = me->get_stats()->get_stat(Stat_Type::MOVE_SPEED);
+	float move_spid = me->get_stats()->get_stat(Stat_Type::MOVE_SPEED)*2;
 	sf::Vector2f vel =
 		math_get_direction(me->getPosition()+me->get_HeightWidth(), tile->get_centre())* move_spid;
 	me->move_hard(vel);
