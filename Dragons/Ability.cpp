@@ -311,12 +311,17 @@ bool Ability_Step::action(){
 	Entity* me = EntityManager::instance()->getEntity(m_my_id);
 	Tile* tile = Level::instance()->get_tile(m_target_id);
 	float move_spid = me->get_stats()->get_stat(Stat_Type::MOVE_SPEED);
+	float dist = math_get_distance(me->getPosition()+me->get_HeightWidth(), tile->get_centre());
+	if(dist < move_spid){
+		move_spid = dist;
+		return true;
+	}
 	sf::Vector2f vel =
 		math_get_direction(me->getPosition()+me->get_HeightWidth(), tile->get_centre())* move_spid;
 	me->move_hard(vel);
-	float dist = math_get_distance(me->getPosition()+me->get_HeightWidth(), tile->get_centre());
+	
 	//std::cout<<dist<<"  "<<vel.x<<" "<<vel.y<<"\n";
-	return (dist <2.3);
+	return false;
 }
 
 
@@ -370,11 +375,15 @@ bool Ability_Lance::action(){
 	Entity* me = EntityManager::instance()->getEntity(m_my_id);
 	Tile* tile = Level::instance()->get_tile(m_target_id);
 	float move_spid = me->get_stats()->get_stat(Stat_Type::MOVE_SPEED)*2;
+	float dist = math_get_distance(me->getPosition()+me->get_HeightWidth(), tile->get_centre());
+	if(dist < move_spid){
+		move_spid = dist;
+		return true;
+	}
 	sf::Vector2f vel =
 		math_get_direction(me->getPosition()+me->get_HeightWidth(), tile->get_centre())* move_spid;
 	me->move_hard(vel);
-	float dist = math_get_distance(me->getPosition()+me->get_HeightWidth(), tile->get_centre());
-	//std::cout<<dist<<"  "<<vel.x<<" "<<vel.y<<"\n";
+
 	Entity* ent = CollisionManager::instance()->check_collision_ents(me);
 	if(ent!= 0){
 		bool hit = false;
@@ -390,5 +399,5 @@ bool Ability_Lance::action(){
 			std::cout<<"collided with \n";
 		}
 	}
-	return (dist <2.3);
+	return false;
 }
