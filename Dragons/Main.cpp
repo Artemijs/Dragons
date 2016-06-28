@@ -201,6 +201,8 @@ void manageInput(){
 		change m_my_id to caster id to avoid confusion
 		macros starting with MAC_ so that i dont have to open up the file everytime
 			or maybe just not use them at all
+		make using abilities feel more responsive,
+			maybe by using the Que system or by beign able to cast a during movement
 */
 /*
 	list of regrets:

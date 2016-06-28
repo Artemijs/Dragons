@@ -1,6 +1,7 @@
 #include "Dragon.h"
 #include "Level.h"
 #include "Math.h"
+#include "Macros.h"
 /*
 to do:
 hp below zero
@@ -64,7 +65,7 @@ Dragon::~Dragon(){
 	//delete m_stats;
 }
 Human::Human(int id):Entity(id){
-	m_rect = sf::RectangleShape(sf::Vector2f(50, 50));
+	m_rect = sf::RectangleShape(sf::Vector2f(TILE_WIDTH/2, TILE_HEIGHT/2));
 }
 Human::~Human(){
 	//delete m_stats;

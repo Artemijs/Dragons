@@ -221,7 +221,7 @@ void Projectile::set_velocity(sf::Vector2f vel){
 Ability_Movement::Ability_Movement(int myid): Ability(myid){
 	m_alive = false;
 	m_damage = 0;
-	m_cast_speed_max = 0.1;//third of a second
+	m_cast_speed_max = 0.0;//third of a second
 	m_cast_speed_time=0;
 	m_mana_cost = 0;
 	m_cool_down_max = 0;
@@ -331,12 +331,12 @@ bool Ability_Step::action(){
 Ability_Blink::Ability_Blink(int myid): Ability_Movement(myid){
 	m_alive = false;
 	m_damage = 0;
-	m_cast_speed_max = 0.1;//third of a second
+	m_cast_speed_max = 0.0;//third of a second
 	m_cast_speed_time=0;
 	m_mana_cost = 0;
 	m_cool_down_max = 1;
 	m_cool_down_current = 0;
-	m_range = 1;
+	m_range = 2;
 	m_target_id = -1;
 	m_target = 0;
 	m_state = Ability_State::READY;
@@ -358,12 +358,12 @@ bool Ability_Blink::action(){
 Ability_Lance::Ability_Lance(int myid): Ability_Movement(myid){
 	m_alive = false;
 	m_damage = 100;
-	m_cast_speed_max = 0.1;//third of a second
+	m_cast_speed_max = 0.3;//third of a second
 	m_cast_speed_time=0;
 	m_mana_cost = 0;
 	m_cool_down_max = 1;
 	m_cool_down_current = 0;
-	m_range = 2;
+	m_range = 3;
 	m_target_id = -1;
 	m_target = 0;
 	m_state = Ability_State::READY;
@@ -396,7 +396,17 @@ bool Ability_Lance::action(){
 		if(!hit){//do damage and remember this entity
 			ent->take_damage(m_damage);
 			m_already_hit_ents.push_back(ent->get_id());
-			std::cout<<"collided with \n";
+			std::cout<<"collided with "<<ent->get_id()<<
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				" \n" ;
 		}
 	}
 	return false;
